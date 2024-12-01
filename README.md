@@ -46,5 +46,10 @@ npx cap add android
 npx cap sync
 ```
 
+## Running the project in the emulator
+```
+ionic capacitor run android
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
