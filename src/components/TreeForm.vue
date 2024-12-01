@@ -61,6 +61,30 @@
           />
         </div>
       </div>
+      
+      <div class="formbold-input-flex">
+        <div>
+          <label for="tree1" class="formbold-form-label">
+            Tree1* </label>
+          <input
+            type="file"
+            name="tree1"
+            id="tree1"
+            class="formbold-form-input"
+          />
+        </div>
+
+        <div>
+          <label for="tree2" class="formbold-form-label">
+            Tree2* </label>
+          <input
+            type="file"
+            name="tree2"
+            id="tree2"
+            class="formbold-form-input"
+          />
+        </div>
+      </div>
 
       <div class="formbold-input-flex">
         <div>
