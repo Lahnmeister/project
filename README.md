@@ -28,6 +28,11 @@ npm i @capacitor/core
 npm i -D @capacitor/cli
 ```
 
+### Installing Ionic
+```
+npm install -g @ionic/cli
+```
+
 ### Adding Android platform
 ```
 ionic build
