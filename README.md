@@ -28,6 +28,11 @@ npm i @capacitor/core
 npm i -D @capacitor/cli
 ```
 
+### Installing Ionic
+```
+npm install -g @ionic/cli
+```
+
 ### Adding Android platform
 ```
 ionic build
@@ -39,6 +44,11 @@ npx cap add android
 ### Synchronizing web code with native project
 ```
 npx cap sync
+```
+
+## Running the project in the emulator
+```
+ionic capacitor run android
 ```
 
 ### Customize configuration
