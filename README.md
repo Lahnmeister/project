@@ -30,6 +30,8 @@ npm i -D @capacitor/cli
 
 ### Adding Android platform
 ```
+ionic build
+ionic cap add android
 npm install @capacitor/android
 npx cap add android
 ```
