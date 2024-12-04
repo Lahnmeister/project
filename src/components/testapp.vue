@@ -17,6 +17,10 @@
       <button @click="getLocation" class="location-button">Standort abrufen</button>
     </div>
 
+    <div>
+      <p>Uhrzeit: {{ time }} </p>
+    </div>
+
     <div v-if="location">
       <p>Standort: {{ location.latitude }}°, {{ location.longitude }}°</p>
       <p>Abweichung: {{ location.accuracy }} Meter</p>
@@ -47,6 +51,7 @@ export default {
       distance: '',
       submitted: false,
       location: null,
+      time: null,
     };
   },
   computed: {
@@ -54,14 +59,30 @@ export default {
     iframeUrl() {
       const { latitude, longitude } = this.location;
       return `https://www.openstreetmap.org/export/embed.html?bbox=${longitude}%2C${latitude}%2C${longitude}%2C${latitude}&layer=mapnik&marker=${latitude}%2C${longitude}`;
-    }
+    },
+  },
+
+  mounted() {
+    this.getTimeByIP();
   },
   methods: {
+    async getTimeByIP() {
+      try {
+        const response = await fetch("http://worldtimeapi.org/api/ip");
+        const data = await response.json();
+
+        this.time = data.datetime; 
+      } catch (error) {
+        setTimeout(this.getTimeByIP, 5000);
+      }
+    },
+
     async handleSubmit() {
       // Umschreiben der JSON
       this.submitted = true;
       const data = {
         distance: this.distance,
+        time: this.time,
         location: {
           latitude: this.location.latitude,
           longitude: this.location.longitude,
