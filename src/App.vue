@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HeaderComponent />
+    <HeaderComponent  v-if="showHeader"/>
     <router-view></router-view>
   </div>
 </template>
@@ -10,7 +10,14 @@ import HeaderComponent from './components/HeaderComponent.vue';
 
 export default {
   components: {
-    HeaderComponent,
+    HeaderComponent
+  },
+  computed: {
+    // Check the current route
+    showHeader() {
+      const hideHeaderRoutes = ["/login", "/register"]; // Routes without header
+      return !hideHeaderRoutes.includes(this.$route.path);
+    },
   },
 };
 </script>
