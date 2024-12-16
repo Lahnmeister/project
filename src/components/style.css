@@ -1,0 +1,255 @@
+/* Startseite */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.form-container h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button.submit-button,
+.location-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button.submit-button:hover,
+.location-button:hover {
+    background-color: #45a049;
+}
+
+.tree-distance p {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.map-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.map-container h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.map-image {
+    width: 100%;
+    max-width: 450px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Header */
+.header {
+    padding: 1em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.header ul {
+    display: flex;
+    gap: 1em;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.header li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.header li a:hover {
+    text-decoration: underline;
+}
+
+.light {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.dark {
+    background-color: #333;
+    color: #f9f9f9;
+}
+
+.switch {
+    position: absolute;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    justify-content: right;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #42b983;
+}
+
+input:checked+.slider:before {
+    transform: translateX(14px);
+}
+
+/* Tutorial */
+.faq {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-item h3 {
+    cursor: pointer;
+    margin: 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+}
+
+h3.active {
+    background-color: #d9edf7;
+    color: #4CAF50;
+}
+
+.faq-item p {
+    margin: 10px 0 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+/* Formular */
+
+.formbold-form-title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 35px;
+    width: 60%;
+    margin-bottom: 30px;
+}
+
+.formbold-form-input {
+    text-align: center;
+    width: 70%;
+    padding: 8px 22px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+}
+
+.formbold-input-flex {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.formbold-input-flex>div {
+    width: 50%;
+}
+
+.formbold-form-label {
+    font-size: 14px;
+    line-height: 24px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.formbold-btn {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+.formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
