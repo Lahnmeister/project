@@ -3,6 +3,7 @@
       <ul>
         <li><router-link to="/">Startseite</router-link></li>
         <li><router-link to="/tutorial">Tutorial</router-link></li>
+        <li><router-link to="/treeform">Baum Form</router-link></li>
         <!--<li><router-link to="/trivia">Trivia</router-link></li>
         <li><router-link to="/vorteile">Vorteile</router-link></li>
         <li><router-link to="/MobileApp">Mobile App</router-link></li>
