@@ -2,7 +2,8 @@
     <nav :class="['header', darkMode ? 'dark' : 'light']">
       <ul>
         <li><router-link to="/">Startseite</router-link></li>
-        <li><router-link to="/overview">Übersicht</router-link></li>
+        <li><router-link to="/overview">Tabellen Übersicht</router-link></li>
+        <li><router-link to="/overview2">Karten Übersicht</router-link></li>
       </ul>
       <label class="switch">
         <input type="checkbox" v-model="darkMode" @change="toggleDarkMode" />
