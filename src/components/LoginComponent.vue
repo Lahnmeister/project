@@ -1,148 +1,162 @@
 <template>
-<div class="div-body">
-  <div class="div-container"> 
+  <div class="form-container">
     <form>
-      <h1>Login</h1>
-
-      <div class="input-box">
-        <!-- <label>Email</label> -->
-        <input type="email" class="form-control" placeholder="Email" required/>
+      <h2 class="formbold-form-title">Login</h2>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="email" class="formbold-form-label">E-Mail</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="E-Mail eingeben"
+            class="formbold-form-input"
+            required
+          />
+        </div>
       </div>
-
-      <div class="input-box">
-        <!-- <label>Password</label> -->
-        <input type="password" class="form-control" placeholder="Password" required>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="password" class="formbold-form-label">Passwort</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Passwort eingeben"
+            class="formbold-form-input"
+            required
+          />
+        </div>
       </div>
-
-      <div class="remember-forgot">
+  
+      <div class="formbold-input-flex remember-forgot">
         <label for="remember">
-          <input type="checkbox" name="" id="remember" >
-            Remember me
+          <input type="checkbox" id="remember" /> Merken
         </label>
-        <a href="#">Forgot password</a>
-        
-        
+        <!--<a href="#" class="forgot-password">Passwort vergessen?</a>-->
       </div>
-
-      <button type="submit" class="btn">Login</button>
-
+  
+      <button type="submit" class="formbold-btn">Login</button>
+  
       <div class="register-link">
-        <p>Don't have an account? <router-link to="/register" class="routing">Register</router-link></p>
+        <!--<p>Don't have an account? <router-link to="/register">Register</router-link></p>-->
       </div>
-
-
     </form>
   </div>
-</div>
-</template>
-
-<script>
-  export default{
-    name: 'LoginComponent'
+  </template>
+  
+  <script>
+  export default {
+    name: 'LoginComponent',
+  };
+  </script>
+  
+  <style scoped>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
   }
-</script>
-
-<style>
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Times New Roman', Times, serif;
-}
-.div-body {
- display: flex ;
- justify-content: center;
- align-items: center;
- min-height: 100vh;
- background: url('/src//assets//img//forest.jpg') no-repeat;;
- background-size: cover;
- background-position: center;
-}
-.div-container{
-  width: 420px;
-  background-color: transparent;
-  border: 2px solid rgba(255, 255, 255, .2);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 10px rgba(255, 255, 255, .2);
-  color: #fff;
-  border-radius: 10px;
-  padding: 30px 40px;
-}
-.div-container h1{
-  font-size: 36px;
-  text-align: center;
-}
-
-.div-container .input-box{
-  position: relative;
-  width: 100%;
-  height: 50px;
-  margin: 30px 0;
-}
-.div-container .btn{
-  width: 100%;
-  height: 45px;
-  background: fff;
-  outline: none;
-  border: none;
-  border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0,0,0, .1);
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: 600;
-}
-
-.input-box input{
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  outline: none;
-  border: 2px solid rgba(255,255,255, .2);
-  border-radius: 40px;
-  font-size: 16px;
-  color: #000000;
-  padding: 20px 45px 20px 20px;
-}
-
-.div-container .register-link{
-  font-size: 14px;
-  text-align: center;
-  margin: 20px 0 15px;
-
-}
-
-.register-link p .routing{
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-.register-link p .routing:hover{
-  text-decoration: underline;
-}
-
-.input-box input::placeholder{
-  color: #ffffff;
-}
-
-.div-container .remember-forgot{
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin: -15px 0 15px;
-}
-
-.remember-forgot label input{
-  accent-color: #fff;
-  margin-right: 3px;
-}
-
-.remember-forgot a{
-  color: #fff;
-  text-decoration: none;
-}
-.remember-forgot a:hover{
-  text-decoration: underline;
-}
-
-</style>
+  
+  .formbold-form-title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 35px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .formbold-form-input {
+    text-align: center;
+    width: 100%;
+    padding: 8px 22px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+  }
+  
+  .formbold-input-flex {
+    display: contents;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  
+  .formbold-input-flex > div {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-form-label {
+    font-size: 14px;
+    line-height: 24px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-btn {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin-top: 25px;
+  }
+  
+  .formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .remember-forgot a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .remember-forgot a:hover {
+    text-decoration: underline;
+  }
+  
+  .register-link {
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .register-link a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  </style>
+  
