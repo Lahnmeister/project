@@ -4,7 +4,7 @@
 
       <p class="formbold-policy">
         Schwieriegkeiten beim ausfüllen? Kein Problem. Klick
-        <a href="/tutorial">hier</a>
+        <a href="/how-to-page">hier</a>
         für hilfe.
       </p>
 

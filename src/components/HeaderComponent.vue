@@ -8,6 +8,7 @@
         <li><router-link to="/register">Register</router-link></li>
         <li><router-link to="/overview">Übersicht</router-link></li>
         <li><router-link to="/faq">FAQ</router-link></li>
+        <li><router-link to="/how-to-page">How-to-Page</router-link></li>
         <!--<li><router-link to="/trivia">Trivia</router-link></li>
         <li><router-link to="/vorteile">Vorteile</router-link></li>
         <li><router-link to="/vorteile">Vorteile</router-link></li>
