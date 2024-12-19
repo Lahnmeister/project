@@ -66,33 +66,6 @@ export default {
 </script>
 
 <style scoped>
-table {
-  margin-top: 20px;
-}
+@import './style.css';
 
-th, td {
-  border: 1px solid black;
-  padding: 10px;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.table-ui {
-  border: 1px solid black;
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.tree-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover; 
-}
 </style>

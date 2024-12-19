@@ -165,36 +165,27 @@ input:checked+.slider:before {
 }
 
 /* Tutorial */
-.faq {
-    max-width: 600px;
-    margin: 0 auto;
+.explanation {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
     font-family: Arial, sans-serif;
-}
-
-.faq-item {
-    margin-bottom: 20px;
-}
-
-.faq-item h3 {
-    cursor: pointer;
-    margin: 0;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-}
-
-h3.active {
-    background-color: #d9edf7;
-    color: #4CAF50;
-}
-
-.faq-item p {
-    margin: 10px 0 0;
-    padding: 10px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-top: none;
-}
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #555;
+  }
 
 /* Formular */
 
@@ -253,3 +244,231 @@ h3.active {
 .formbold-btn:hover {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
+
+/* Register */
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .formbold-form-title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 35px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .formbold-form-input {
+    text-align: center;
+    width: 100%;
+    padding: 8px 22px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+  }
+  
+  .formbold-input-flex {
+    display: contents;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  
+  .formbold-input-flex > div {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-form-label {
+    font-size: 14px;
+    line-height: 24px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-btn {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin-top: 25px;
+  }
+  
+  .formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .alert {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  /* Login */
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .formbold-form-title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 35px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .formbold-form-input {
+    text-align: center;
+    width: 100%;
+    padding: 8px 22px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 15px;
+    outline: none;
+    resize: none;
+  }
+  
+  .formbold-input-flex {
+    display: contents;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  
+  .formbold-input-flex > div {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-form-label {
+    font-size: 14px;
+    line-height: 24px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .formbold-btn {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin-top: 25px;
+  }
+  
+  .formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .remember-forgot a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .remember-forgot a:hover {
+    text-decoration: underline;
+  }
+  
+  .register-link {
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .register-link a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* Overview */
+
+  table {
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid black;
+    padding: 10px;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .table-ui {
+    border: 1px solid black;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  .tree-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; 
+  }

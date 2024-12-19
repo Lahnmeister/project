@@ -1,6 +1,6 @@
 <template>
   <form action="" method="POST" class="form-container">
-    <h2 class="formbold-form-title">Tree registration</h2>
+    <h2 class="formbold-form-title">Baumregistrierung</h2>
 
     <div class="formbold-input-flex">
       <div>
@@ -28,7 +28,7 @@
 
     <div class="formbold-input-flex">
       <div>
-        <label for="tree1" class="formbold-form-label">Tree1*</label>
+        <label for="tree1" class="formbold-form-label">Bild Nr. 1</label>
         <input
           type="file"
           name="tree1"
@@ -38,7 +38,7 @@
       </div>
 
       <div>
-        <label for="tree2" class="formbold-form-label">Tree2*</label>
+        <label for="tree2" class="formbold-form-label">Bild Nr. 2</label>
         <input
           type="file"
           name="tree2"
@@ -50,7 +50,7 @@
 
     <div class="formbold-input-flex">
       <div>
-        <label for="location" class="formbold-form-label">Your location</label>
+        <!--<label for="location" class="formbold-form-label">Your location</label>-->
         <div v-if="location">
           <iframe :src="iframeUrl" style="border: 1px solid black"></iframe>
           <br />
@@ -58,10 +58,10 @@
       </div>
     </div>
 
-    <p class="formbold-policy">
+    <!--<p class="formbold-policy">
       privacy policy oder so
       <a href="#">privacy policy.</a>
-    </p>
+    </p>-->
     <button class="formbold-btn">Register tree</button>
   </form>
 </template>
@@ -125,80 +125,5 @@ export default {
 </script>
 
 <style scoped>
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.formbold-form-title {
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 35px;
-  width: 100%;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.formbold-form-input {
-  text-align: center;
-  width: 100%;
-  padding: 8px 22px;
-  border-radius: 5px;
-  border: 1px solid #dde3ec;
-  background: #ffffff;
-  font-weight: 500;
-  font-size: 15px;
-  outline: none;
-  resize: none;
-}
-
-.formbold-input-flex {
-  display: contents;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.formbold-input-flex>div {
-  width: 100%; 
-  max-width: 300px; 
-  margin-bottom: 10px;
-}
-
-.formbold-form-label {
-  font-size: 14px;
-  line-height: 24px;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.formbold-btn {
-  text-align: center;
-  width: 100%;
-  font-size: 16px;
-  border-radius: 5px;
-  padding: 14px 25px;
-  border: none;
-  font-weight: 500;
-  background-color: #4CAF50;
-  color: white;
-  cursor: pointer;
-  margin-top: 25px;
-}
-
-.formbold-btn:hover {
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-}
-
-.formbold-policy {
-  font-size: 12px;
-  margin-top: 20px;
-  text-align: center;
-}
+@import './style.css';
 </style>
