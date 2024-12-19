@@ -6,13 +6,14 @@
         <li><router-link to="/treeform">Baum Form</router-link></li>
         <li><router-link to="/login">Login</router-link></li>
         <li><router-link to="/register">Register</router-link></li>
-        <li><router-link to="/overview">Übersicht</router-link></li>
         <!--<li><router-link to="/trivia">Trivia</router-link></li>
         <li><router-link to="/vorteile">Vorteile</router-link></li>
         <li><router-link to="/vorteile">Vorteile</router-link></li>
         <li><router-link to="/MobileApp">Mobile App</router-link></li>
         <li><router-link to="/v-model">Demo - v-model</router-link></li>
         <li><router-link to="/testapp">Testapp</router-link></li>-->
+        <li><router-link to="/overview">Tabellen Übersicht</router-link></li>
+        <li><router-link to="/overview2">Karten Übersicht</router-link></li>
       </ul>
       <label class="switch">
         <input type="checkbox" v-model="darkMode" @change="toggleDarkMode" />
