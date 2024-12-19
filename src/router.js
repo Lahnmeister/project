@@ -6,7 +6,8 @@ const routes = [
     { path: '/treeform', component: () => import('./components/TreeForm.vue') },
     { path: '/login', component: () => import('./components/LoginComponent.vue') },
     { path: '/register', component: () => import('./components/RegisterComponent.vue') },
-    { path: '/overview', component: () => import('./components/OverviewComponent.vue') }
+    { path: '/overview', component: () => import('./components/OverviewComponent.vue') },
+    { path: '/faq', component: () => import('./components/FAQComponent.vue') }
 ];
 
 const router = createRouter({

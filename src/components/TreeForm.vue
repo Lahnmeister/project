@@ -2,6 +2,12 @@
     <form action="" method="POST">
       <h2 class="formbold-form-title">Tree registration</h2>
 
+      <p class="formbold-policy">
+        Schwieriegkeiten beim ausfüllen? Kein Problem. Klick
+        <a href="/tutorial">hier</a>
+        für hilfe.
+      </p>
+
       <div class="formbold-input-flex">
         <div>
           <label for="name-of-measurer" class="formbold-form-label">
@@ -98,10 +104,9 @@
         </div>
       </div>
 
-      <p class="formbold-policy">
-        privacy policy oder so
-        <a href="#">privacy policy.</a>
-      </p>
+      
+
+      
       <button class="formbold-btn">Register tree</button>
   </form>
 </template>
