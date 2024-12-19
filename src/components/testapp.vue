@@ -17,6 +17,10 @@
       <button @click="getLocation" class="location-button">Standort abrufen</button>
     </div>
 
+    <div>
+      <p>Uhrzeit: {{ time }} </p>
+    </div>
+
     <div v-if="location">
       <p>Standort: {{ location.latitude }}°, {{ location.longitude }}°</p>
       <p>Abweichung: {{ location.accuracy }} Meter</p>
@@ -47,6 +51,7 @@ export default {
       distance: '',
       submitted: false,
       location: null,
+      time: null,
     };
   },
   computed: {
@@ -54,14 +59,30 @@ export default {
     iframeUrl() {
       const { latitude, longitude } = this.location;
       return `https://www.openstreetmap.org/export/embed.html?bbox=${longitude}%2C${latitude}%2C${longitude}%2C${latitude}&layer=mapnik&marker=${latitude}%2C${longitude}`;
-    }
+    },
+  },
+
+  mounted() {
+    this.getTimeByIP();
   },
   methods: {
+    async getTimeByIP() {
+      try {
+        const response = await fetch("http://worldtimeapi.org/api/ip");
+        const data = await response.json();
+
+        this.time = data.datetime; 
+      } catch (error) {
+        setTimeout(this.getTimeByIP, 5000);
+      }
+    },
+
     async handleSubmit() {
       // Umschreiben der JSON
       this.submitted = true;
       const data = {
         distance: this.distance,
+        time: this.time,
         location: {
           latitude: this.location.latitude,
           longitude: this.location.longitude,
@@ -98,79 +119,5 @@ export default {
 </script>
 
 <style scoped>
-.form-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-h1 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 5px;
-  display: block;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button.submit-button,
-.location-button {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button.submit-button:hover,
-.location-button:hover {
-  background-color: #45a049;
-}
-
-div p {
-  text-align: center;
-  font-size: 18px;
-  color: #333;
-}
-
-.map-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.map-container h2 {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.map-image {
-  width: 100%;
-  max-width: 450px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
+@import './style.css';
 </style>
