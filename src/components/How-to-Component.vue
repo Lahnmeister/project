@@ -1,34 +1,34 @@
 <template>
   <div class="explanation">
     <h1>How to Measure a Tree</h1>
-    <h2>Step 1</h2>
+    <h2>Schritt 1</h2>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, ipsam amet. Quisquam at reiciendis iure dolore
       necessitatibus odit nostrum nobis sequi harum! Amet harum odit dicta error sequi deserunt quaerat.</p>
-    <h2>Step 2</h2>
+    <h3>Häufigster Fehler hierbei</h3>
+    <p class="most-common-error">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis quas dolore
+      architecto quos voluptatum, iste
+      veritatis error minus nostrum soluta quis ut, dolor qui autem voluptatem, officia totam voluptatibus ex?</p>
+    <h2>Schritt 2</h2>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quia distinctio culpa, recusandae repellendus ut
       doloribus ipsa ullam molestias, cupiditate ratione asperiores sunt soluta quis nostrum temporibus nemo fugit
       rerum?</p>
-    <h2>Step 3</h2>
+    <h3>Häufigster Fehler hierbei</h3>
+    <p class="most-common-error">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis quas dolore
+      architecto quos voluptatum, iste
+      veritatis error minus nostrum soluta quis ut, dolor qui autem voluptatem, officia totam voluptatibus ex?</p>
+
+    <h2>Schritt 3</h2>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quia distinctio culpa, recusandae repellendus ut
       doloribus ipsa ullam molestias, cupiditate ratione asperiores sunt soluta quis nostrum temporibus nemo fugit
       rerum?</p>
+    <h3>Häufigster Fehler hierbei</h3>
+    <p class="most-common-error">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis quas dolore
+      architecto quos voluptatum, iste
+      veritatis error minus nostrum soluta quis ut, dolor qui autem voluptatem, officia totam voluptatibus ex?</p>
+
 
   </div>
-  <div class="explanation">
-    <h1>Most Common Errors</h1>
-    <h2>First Error</h2>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, ipsam amet. Quisquam at reiciendis iure dolore
-      necessitatibus odit nostrum nobis sequi harum! Amet harum odit dicta error sequi deserunt quaerat.</p>
-    <h2>Second Error</h2>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quia distinctio culpa, recusandae repellendus ut
-      doloribus ipsa ullam molestias, cupiditate ratione asperiores sunt soluta quis nostrum temporibus nemo fugit
-      rerum?</p>
-    <h2>Third Error</h2>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quia distinctio culpa, recusandae repellendus ut
-      doloribus ipsa ullam molestias, cupiditate ratione asperiores sunt soluta quis nostrum temporibus nemo fugit
-      rerum?</p>
 
-  </div>
 </template>
 <script>
 
@@ -55,5 +55,9 @@ p {
   font-size: 1.2rem;
   line-height: 1.6;
   color: #555;
+}
+
+.most-common-error {
+  font-size: 1rem;
 }
 </style>
