@@ -123,7 +123,6 @@
 
 <script>
 export default {
-  name: "TableView",
   data() {
     return {
       selectedDate: '',
