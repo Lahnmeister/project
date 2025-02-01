@@ -70,11 +70,11 @@ export default {
       try {
         this.formData.measurement.suspected_tree_type=this.formData.tree_type;
         console.log(JSON.stringify(this.formData));
-        const response = await fetch("http://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
+        const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",  // API erwartet JSON-Daten
-            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzgxNzg0NjksImV4cCI6MTczODI2NDg2OSwianRpIjoiM2NhYWQ3NzYtNTNhYS00MjlmLTg0ZjctMjgyZGMxY2Y1YzFiIiwiaWQiOjEsInJscyI6IlVzZXIsQWRtaW4iLCJyZl9leHAiOjE3NDA3NzA0Njl9.Ph7Gj-rQrlggrohyNvDzqFjhG3m-7P07lYavG0WaI44`,
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(this.formData)
         });
