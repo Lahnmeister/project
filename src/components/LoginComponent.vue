@@ -62,7 +62,7 @@ const router = useRouter();
 
 const login = async () => {
   try {
-    const response = await fetch("http://treescope.cs.hs-fulda.de/auth/login", {
+    const response = await fetch("https://treescope.cs.hs-fulda.de/auth/login", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json", }, // API erwartet JSON-Daten
