@@ -11,7 +11,7 @@ export default {
     methods: {
         shareOnTwitter() {
             const text = encodeURIComponent("Schau dir diesen coolen Baum an!");
-            const url = encodeURIComponent("https://example.com");
+            const url = encodeURIComponent("http://treescope.cs.hs-fulda.de/static/uploads/d6466207b1824bfeecb1945c6e1a39afdb662b11cf55f1e3a4c45376f68f15f3.png");
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
         }
     }
