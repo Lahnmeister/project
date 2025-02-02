@@ -6,39 +6,30 @@
     <div class="formbold-input-flex">
       <div>
         <label for="email" class="formbold-form-label">E-Mail</label>
-        <input
-          v-model="username"
-          type="text"
-          name="Username"
-          id="email"
-          placeholder="Benutzername eingeben"
-          class="formbold-form-input"
-          required
-        />
+        <input v-model="username" type="text" name="Username" id="email" placeholder="Benutzername eingeben"
+          class="formbold-form-input" required />
       </div>
     </div>
 
     <div class="formbold-input-flex">
       <div>
         <label for="password" class="formbold-form-label">Passwort</label>
-        <input
-          v-model="password"
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Passwort eingeben"
-          class="formbold-form-input"
-          required
-        />
+        <input v-model="password" type="password" name="password" id="password" placeholder="Passwort eingeben"
+          class="formbold-form-input" required />
       </div>
     </div>
 
     <div class="formbold-input-flex remember-forgot">
       <label for="remember">
         <input type="checkbox" id="remember" /> Merken
+        <router-link to="/passwordreset">
+          <button class="formbold-btn">Passwort vergessen?</button>
+        </router-link>
       </label>
       <!--<a href="#" class="forgot-password">Passwort vergessen?</a>-->
     </div>
+
+
 
     <button @click="login" class="formbold-btn">Login</button>
 
@@ -64,9 +55,10 @@ const login = async () => {
   try {
     const response = await fetch("https://treescope.cs.hs-fulda.de/auth/login", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json", }, // API erwartet JSON-Daten
-      
+      headers: {
+        "Content-Type": "application/json",
+      }, // API erwartet JSON-Daten
+
       body: JSON.stringify({
         username: username.value,
         password: password.value,
@@ -89,4 +81,4 @@ const login = async () => {
 
 <style scoped>
 @import './style.css';
-  </style>
+</style>
