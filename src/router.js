@@ -7,7 +7,8 @@ const routes = [
     { path: '/login', component: () => import('./components/LoginComponent.vue') },
     { path: '/register', component: () => import('./components/RegisterComponent.vue') },
     { path: '/overview', component: () => import('./components/OverviewComponent.vue') },
-    { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') }
+    { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') },
+    { path: '/user', component: () => import('./components/UserDataComponent.vue') },
 ];
 
 const router = createRouter({

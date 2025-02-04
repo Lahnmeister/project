@@ -13,6 +13,7 @@
       <li><router-link to="/MobileApp">Mobile App</router-link></li>
       <li><router-link to="/v-model">Demo - v-model</router-link></li>
       <li><router-link to="/testapp">Testapp</router-link></li>-->
+      <li><router-link to="/user">User</router-link></li>
       <li v-if="isAuthenticated"><router-link to="/overview">Tabellen Übersicht</router-link></li>
       <li v-if="isAuthenticated"><router-link to="/overview2">Karten Übersicht</router-link></li>
       <button v-if="isAuthenticated" class="submit-button" @click="logout">Ausloggen</button>
