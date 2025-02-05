@@ -14,6 +14,7 @@
       <p><strong>E-Mail:</strong> {{ user.email || 'Nicht angegeben' }}</p>
       <p><strong>Vorname:</strong> {{ user.firstName || 'Nicht angegeben' }}</p>
       <p><strong>Nachname:</strong> {{ user.lastName || 'Nicht angegeben' }}</p>
+      <p><strong>Schrittlänge (in cm):</strong> {{ user.step_length || 'Nicht angegeben' }}</p>
       <p><strong>Adresse:</strong> {{ user.address || 'Nicht angegeben' }}</p>
       <p><strong>Passwort:</strong> ********</p>
 
@@ -69,6 +70,18 @@
           v-model="user.lastName"
           type="text"
           placeholder="Optional"
+        />
+      </div>
+
+      <!-- Neues Feld: Schrittlänge (in cm) -->
+      <div class="form-group">
+        <label for="step_length">Schrittlänge (in cm) <span class="required">*</span></label>
+        <input
+          id="step_length"
+          v-model.number="user.step_length"
+          type="number"
+          required
+          placeholder="Schrittlänge in cm"
         />
       </div>
 
@@ -291,6 +304,7 @@ export default {
         email: "",
         firstName: "",
         lastName: "",
+        step_length: 0, 
         address: "",
         latitude: "",
         longitude: "",
@@ -416,6 +430,7 @@ export default {
           this.user.email = data.email || "";
           this.user.firstName = data.first_name || "";
           this.user.lastName = data.last_name || "";
+          this.user.step_length = data.step_length || 0; 
           this.user.latitude = this.formatCoordinate(data.latitude) || "";
           this.user.longitude = this.formatCoordinate(data.longitude) || "";
 
@@ -452,6 +467,10 @@ export default {
         this.formError = "Bitte gib einen gültigen Benutzernamen ein.";
         return;
       }
+      if (!this.user.step_length || this.user.step_length < 60 || this.user.step_length > 90) {
+        this.formError = "Bitte gib eine Schrittlänge zwischen 60 und 90 cm ein.";
+        return;
+      }
 
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
@@ -465,7 +484,8 @@ export default {
         const updateParams = {
           username: this.user.username,
           latitude: this.formatCoordinate(this.user.latitude),
-          longitude: this.formatCoordinate(this.user.longitude)
+          longitude: this.formatCoordinate(this.user.longitude),
+          step_length: this.user.step_length 
         };
         if (this.user.firstName.trim() !== "") {
           updateParams.first_name = this.user.firstName;
@@ -492,6 +512,7 @@ export default {
           this.user.email = data.email || "";
           this.user.firstName = data.first_name || "";
           this.user.lastName = data.last_name || "";
+          this.user.step_length = data.step_length || 0;
           this.user.latitude = this.formatCoordinate(data.latitude) || "";
           this.user.longitude = this.formatCoordinate(data.longitude) || "";
 
