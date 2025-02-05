@@ -51,10 +51,11 @@ export default {
         console.warn("Die Karte wurde bereits initialisiert.");
         return;
       }
-      // Create the map
+      // Create the map with zoomAnimation disabled to prevent errors on popup close
       this.map = L.map(this.$refs.mapContainer, {
         center: [51.1657, 10.4515], // Centered on Germany
         zoom: 6,
+        zoomAnimation: false, //To avoid _animatezoom errors
         minZoom: 2, // Minimum zoom level
         maxBounds: [
           [-90, -180],
@@ -62,7 +63,7 @@ export default {
         ],
         maxBoundsViscosity: 1.0,
       });
-      // Makes sure that the card is not infinite
+      // Add tile layer
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
@@ -96,7 +97,7 @@ export default {
         // Transfer height from measurements, perform reverse geocoding and set imageUrl
         await Promise.all(
           this.trees.map(async (tree) => {
-            //measurements
+            // measurements
             const measurement = (tree.measurements && tree.measurements.length > 0)
               ? tree.measurements[0]
               : null;
