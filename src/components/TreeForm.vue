@@ -5,46 +5,26 @@
     <div class="formbold-input-flex">
       <div>
         <label for="tree-type" class="formbold-form-label">Baumart</label>
-        <input
-          type="text"
-          name="tree-type"
-          id="tree-type"
-          class="formbold-form-input"
-        />
+        <input type="text" name="tree-type" id="tree-type" class="formbold-form-input" />
       </div>
     </div>
 
     <div class="formbold-input-flex">
       <div>
-        <label for="phone" class="formbold-form-label">Neigung</label>
-        <input
-          type="number"
-          name="inclination-in-degrees"
-          id="inclination-in-degrees"
-          class="formbold-form-input"
-        />
+        <label for="inclination" class="formbold-form-label">Neigung</label>
+        <input type="number" name="inclination-in-degrees" id="inclination-in-degrees" class="formbold-form-input" />
       </div>
     </div>
 
     <div class="formbold-input-flex">
       <div>
         <label for="tree1" class="formbold-form-label">Bild Nr. 1</label>
-        <input
-          type="file"
-          name="tree1"
-          id="tree1"
-          class="formbold-form-input"
-        />
+        <input type="file" name="tree1" id="tree1" class="formbold-form-input" />
       </div>
 
       <div>
         <label for="tree2" class="formbold-form-label">Bild Nr. 2</label>
-        <input
-          type="file"
-          name="tree2"
-          id="tree2"
-          class="formbold-form-input"
-        />
+        <input type="file" name="tree2" id="tree2" class="formbold-form-input" />
       </div>
     </div>
 
@@ -118,7 +98,7 @@ export default {
       }
     }
   },
-  created: function(){
+  created: function () {
     this.getLocation()
   }
 }
