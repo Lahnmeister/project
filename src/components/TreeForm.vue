@@ -1,28 +1,31 @@
 <template>
- 
+
   <form class="form-container" @submit.prevent="submitForm">
     <h2 class="formbold-form-title">Baumregistrierung</h2>
-    
+
     <div class="formbold-input-flex">
       <label class="formbold-form-label">Baumart</label>
-      <input  v-model="formData.tree_type" placeholder="Baumart" class="formbold-form-input" required />
+      <input v-model="formData.tree_type" placeholder="Baumart" class="formbold-form-input" required />
     </div>
 
     <label class="formbold-form-label">Höhe des Baumes</label>
-    <input v-model="formData.measurement.height" placeholder="Höhe" min="1" type="number" class="formbold-form-input" required />
+    <input v-model="formData.measurement.height" placeholder="Höhe" min="1" type="number" class="formbold-form-input"
+      required />
 
     <label class="formbold-form-label">Neigung</label>
-    <input v-model="formData.measurement.inclination" placeholder="Neigung" min="1" max="89" type="number" class="formbold-form-input" required />
+    <input v-model="formData.measurement.inclination" placeholder="Neigung" min="1" max="89" type="number"
+      class="formbold-form-input" required />
 
     <label class="formbold-form-label">Durchmesser des Stamms</label>
-    <input v-model="formData.measurement.trunk_diameter" placeholder="Durchmesser des Stamms" min="1" type="number" class="formbold-form-input" required />
+    <input v-model="formData.measurement.trunk_diameter" placeholder="Durchmesser des Stamms" min="1" type="number"
+      class="formbold-form-input" required />
 
     <label class="formbold-form-label">Notiz</label>
     <input v-model="formData.measurement.notes" placeholder="Notiz" />
-    
 
-      <input type="file" @change="handleFileUpload($event, 0)" />
-      <input type="file" @change="handleFileUpload($event, 1)" />
+
+    <input type="file" @change="handleFileUpload($event, 0)" />
+    <input type="file" @change="handleFileUpload($event, 1)" />
 
     <div v-if="location">
       <iframe :src="iframeUrl" style="border: 1px solid black"></iframe>
@@ -30,7 +33,7 @@
     </div>
     <button type="submit">Absenden</button>
   </form>
-  
+
 </template>
 
 <script>
@@ -68,11 +71,11 @@ export default {
   methods: {
     async submitForm() {
       try {
-        this.formData.measurement.suspected_tree_type=this.formData.tree_type;
+        this.formData.measurement.suspected_tree_type = this.formData.tree_type;
         console.log(JSON.stringify(this.formData));
         const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
           method: "POST",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",  // API erwartet JSON-Daten
             "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
@@ -89,13 +92,13 @@ export default {
       try {
         const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
         if (position.coords) {
+          // Runden auf maximal sechs Nachkommastellen
           this.location = position.coords;
-          this.formData.longitude=this.location.longitude;
-          this.formData.latitude=this.location.latitude;
-
+          this.formData.latitude = Number(this.location.latitude.toFixed(6));
+          this.formData.longitude = Number(this.location.longitude.toFixed(6));
         }
       } catch (error) {
-        console.log("GeoLocation konnte net bitch");
+        console.log("GeoLocation konnte nicht abgerufen werden:", error);
       }
     },
     addFileInput() {
@@ -105,21 +108,21 @@ export default {
       this.addFileInput();
       const file = event.target.files[0]; // Greift auf die ausgewählte Datei zu
       if (!file) return; // Falls keine Datei gewählt wurde, nichts tun
-      
+
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      
+
       reader.onload = () => {
         this.formData.files[index].filename = file.name;
         this.formData.files[index].photo_data = reader.result;
       };
-      
+
       reader.onerror = (error) => {
         console.error("Fehler beim Lesen der Datei:", error);
       };
     }
   },
-  created: function(){
+  created: function () {
     this.getLocation()
   }
 };
@@ -127,25 +130,25 @@ export default {
 
 
 <script setup>
-import {onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // Variable, um zu prüfen, ob der Benutzer authentifiziert ist
 const router = useRouter();
-  
-  // Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
-        return;
-    }
-  };
-  
-  // Beim Laden der Seite die Authentifizierung prüfen
-  onMounted(() => {
-    checkAuth();
-  });
+
+// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
+const checkAuth = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+    return;
+  }
+};
+
+// Beim Laden der Seite die Authentifizierung prüfen
+onMounted(() => {
+  checkAuth();
+});
 
 
 
@@ -155,4 +158,3 @@ const router = useRouter();
 <style scoped>
 @import './style.css';
 </style>
-
