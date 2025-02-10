@@ -1,12 +1,14 @@
 <template>
   <div v-if="showTutorial" class="tutorial-overlay">
+
     <div class="tutorial-content" v-if="!showMeasurementTutorial && !showAdditionalPage">
       <h2 v-if="currentPage <= 4">Citizen Science - Baummessung</h2>
 
       <div v-if="currentPage === 1">
         <h3>Möchten Sie sich jetzt registrieren?</h3>
         <button @click="goToRegistration">Ja</button>
-        <button @click="startMeasurementTutorial">Nein, später</button>
+
+        <button @click="skipAndStartMeasurementTutorial">Nein, später</button>
       </div>
 
       <div v-else-if="currentPage === 2">
@@ -20,7 +22,7 @@
 
       <div v-else-if="currentPage === 3">
         <h3>E-Mail</h3>
-        <p>Geben Ihre E-Mail-Adresse ein:</p>
+        <p>Geben Sie Ihre E-Mail-Adresse ein:</p>
         <input type="email" v-model="formData.email" placeholder="E-Mail" />
         <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
         <button @click="prevPage">Zurück</button>
@@ -39,11 +41,10 @@
       <div v-else-if="currentPage === 5">
         <h3 v-if="!serverErrorMessage">Die Registrierung ist vollendet!</h3>
         <p v-if="!serverErrorMessage">Du kannst dich nun am Citizen-Science-Projekt beteiligen.</p>
-
         <h3 v-else>Fehler bei der Registrierung</h3>
         <p v-if="serverErrorMessage" style="color: red;">{{ serverErrorMessage }}</p>
         <button @click="prevPage" v-if="serverErrorMessage">Zurück</button>
-        <button @click="startMeasurementTutorial" v-else>Schließen & Mess-Tutorial starten</button>
+        <button @click="closeTutorial" v-else>Schließen</button>
       </div>
     </div>
 
@@ -52,8 +53,7 @@
       <p>Distanz mit Schritten messen</p>
 
       <h3>Schrittweiten-Tabelle</h3>
-
-      <b>1. Suche deine Körpergröße aus der ersten Tabelle aus und lege einen normalen Schritt zurück</b>
+      <b>1. Suche deine Körpergröße aus der Tabelle aus und lege einen normalen Schritt zurück</b>
       <table>
         <thead>
           <tr>
@@ -70,39 +70,41 @@
           </tr>
         </tbody>
       </table>
+      <b>2. Stelle sicher, dass du maximal ± 5 cm Abweichung von deinem erwarteten Durchschnittswert hast</b>
+      <br />
+      <b>3. Gib an, ob deine Schrittlänge dem erwarteten Wert entspricht:</b>
 
-      <h3>Schuhgrößen-Tabelle</h3>
-      <b>2. Such deine Schuhgröße aus und füge die nötige Anzahl der Fußlängen hinzu, um auf einen Meter zu kommen</b>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>Fußlänge in cm</th>
-            <th>Deutsche Größen</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, index) in shoeSizes" :key="index">
-            <td>{{ row.footLength }}</td>
-            <td>{{ row.size }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <b>3. Merk dir die ungefähre Schrittgröße und wende es dann bei der Messung an</b>
-      
-      <button @click="goToAdditionalPage">Weiter zur nächsten Seite</button>
+      <div class="step-length-check">
+        <h3>Entspricht deine Schrittlänge dem erwarteten Wert?</h3>
+        <p>Bitte wähle:</p>
+        <button @click="handleStepLengthYes">Ja</button>
+        <button @click="handleStepLengthNo">Nein</button>
+      </div>
+
+      <div v-if="stepLengthConfirmed === 'yes'" class="height-input">
+        <label for="userHeight">Bitte gib deine Körpergröße in cm an:</label>
+        <input type="number" v-model.number="userHeight" placeholder="Körpergröße in cm" id="userHeight" />
+        <button @click="confirmHeight">Bestätigen</button>
+      </div>
+
+      <div v-if="stepLengthConfirmed === 'no'" class="manual-step-input">
+        <label for="manualStepLength">Bitte gib deine Schrittgröße in cm an:</label>
+        <input type="number" v-model.number="manualStepLength" placeholder="Schrittgröße in cm" id="manualStepLength" />
+        <button @click="confirmManualStep">Bestätigen</button>
+      </div>
     </div>
 
     <div class="tutorial-content" v-if="showAdditionalPage">
       <h2>Weitere Informationen zur Baummessung</h2>
       <h3>Tipps zur Messung</h3>
       <ul>
-        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise befindest du dich auf der selben Höhe wie der Baum.</li>
-        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
+        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise
+          befindest du dich auf der selben Höhe wie der Baum.</li>
+        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das
+          andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
         <li>Halte bitte dein Gerät ungefähr auf der Brusthöhe, wenn du das Bild machen möchtest.</li>
         <li>Achte darauf, dass einige Bäume mehrere Kronen haben können, die möglicherweise höher sind als die anderen.</li>
       </ul>
-
       <button @click="closeTutorial">Schließen</button>
     </div>
   </div>
@@ -118,6 +120,8 @@ export default {
       showMeasurementTutorial: false,
       showAdditionalPage: false,
       currentPage: 1,
+
+      skipRegistration: false,
       formData: {
         username: "",
         email: "",
@@ -125,6 +129,11 @@ export default {
       },
       errorMessage: "",
       serverErrorMessage: "",
+      stepLengthConfirmed: null,
+      userHeight: null,
+      manualStepLength: null,
+
+      stepLength: null,
       stepLengths: [
         { height: 152, female: 64, male: 64 },
         { height: 155, female: 64, male: 64 },
@@ -143,23 +152,6 @@ export default {
         { height: 191, female: 79, male: 79 },
         { height: 193, female: 79, male: 81 },
         { height: 196, female: 81, male: 81 }
-      ],
-
-      shoeSizes: [
-        { footLength: 21.8, size: 35 },
-        { footLength: 22.5, size: 36 },
-        { footLength: 23.1, size: 37 },
-        { footLength: 23.8, size: 38 },
-        { footLength: 24.5, size: 39 },
-        { footLength: 25.1, size: 40 },
-        { footLength: 25.8, size: 41 },
-        { footLength: 26.5, size: 42 },
-        { footLength: 27.1, size: 43 },
-        { footLength: 27.8, size: 44 },
-        { footLength: 28.5, size: 45 },
-        { footLength: 29.1, size: 46 },
-        { footLength: 29.8, size: 47 },
-        { footLength: 30.5, size: 48 },
       ]
     };
   },
@@ -171,8 +163,7 @@ export default {
   methods: {
     nextPage() {
       if (this.currentPage === 2 && !this.validateUsername(this.formData.username)) {
-        this.errorMessage =
-          "Der Benutzername darf keine Sonderzeichen oder Zahlen enthalten.";
+        this.errorMessage = "Der Benutzername darf keine Sonderzeichen oder Zahlen enthalten.";
         return;
       }
       if (this.currentPage === 3 && !this.validateEmail(this.formData.email)) {
@@ -196,15 +187,23 @@ export default {
       }
     },
     goToRegistration() {
+      this.skipRegistration = false;
       this.currentPage = 2;
     },
-    async finishRegistration() {
+    skipAndStartMeasurementTutorial() {
+      this.skipRegistration = true;
+      this.startMeasurementTutorial();
+    },
+    finishRegistration() {
       if (!this.validatePassword(this.formData.password)) {
         this.errorMessage = "Das Passwort muss mindestens acht Zeichen lang sein.";
         this.currentPage = 4;
         return;
       }
-
+      this.errorMessage = "";
+      this.startMeasurementTutorial();
+    },
+    async registerUser() {
       try {
         const response = await axios.post(
           "https://treescope.cs.hs-fulda.de/auth/register",
@@ -212,9 +211,9 @@ export default {
             username: this.formData.username,
             email: this.formData.email,
             password: this.formData.password,
+            step_length: this.stepLength
           }
         );
-
         if (response.status === 201) {
           console.log("Registrierung erfolgreich:", response.data);
           this.serverErrorMessage = "";
@@ -225,12 +224,9 @@ export default {
       } catch (error) {
         console.error("Fehler bei der Registrierung:", error);
         if (error.response && error.response.status === 403) {
-
-          this.serverErrorMessage =
-            "Diese E-Mail-Adresse oder der Benutzername wird bereits verwendet.";
+          this.serverErrorMessage = "Diese E-Mail-Adresse oder der Benutzername wird bereits verwendet.";
         } else {
-          this.serverErrorMessage =
-            "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
+          this.serverErrorMessage = "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
         }
         this.currentPage = 5;
       }
@@ -249,9 +245,50 @@ export default {
     startMeasurementTutorial() {
       this.showMeasurementTutorial = true;
     },
-    goToAdditionalPage() {
+    handleStepLengthYes() {
+      this.stepLengthConfirmed = 'yes';
+    },
+    handleStepLengthNo() {
+      this.stepLengthConfirmed = 'no';
+    },
+    confirmHeight() {
+      if (!this.userHeight || this.userHeight <= 0) {
+        alert('Bitte geben Sie eine gültige Körpergröße in cm an.');
+        return;
+      }
+      let stepSize;
+      const matching = this.stepLengths.find(row => row.height >= this.userHeight);
+      if (matching) {
+        stepSize = (matching.female + matching.male) / 2;
+      } else {
+        const last = this.stepLengths[this.stepLengths.length - 1];
+        stepSize = (last.female + last.male) / 2;
+      }
+      this.stepLength = stepSize;
+      localStorage.setItem('userHeight', this.userHeight);
+      localStorage.setItem('derivedStepSize', stepSize);
+
       this.showMeasurementTutorial = false;
-      this.showAdditionalPage = true;
+      if (!this.skipRegistration) {
+        this.registerUser();
+      } else {
+        this.closeTutorial();
+      }
+    },
+    confirmManualStep() {
+      if (!this.manualStepLength || this.manualStepLength <= 0) {
+        alert("Bitte geben Sie eine gültige Schrittgröße in cm an.");
+        return;
+      }
+      this.stepLength = this.manualStepLength;
+      localStorage.setItem('manualStepSize', this.manualStepLength);
+
+      this.showMeasurementTutorial = false;
+      if (!this.skipRegistration) {
+        this.registerUser();
+      } else {
+        this.closeTutorial();
+      }
     },
     closeTutorial() {
       this.showTutorial = false;
