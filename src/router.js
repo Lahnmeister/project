@@ -1,15 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
-  { path: '/', component: () => import('./components/testapp.vue') },
-  { path: '/tutorial', component: () => import('./components/TutorialSite.vue') },
-  { path: '/treeform', component: () => import('./components/TreeForm.vue') },
-  { path: '/login', component: () => import('./components/LoginComponent.vue') },
-  { path: '/register', component: () => import('./components/RegisterComponent.vue') },
-  { path: '/overview', component: () => import('./components/OverviewComponent.vue') },
-  { path: '/passwordreset', component: () => import('./components/ForgotPassword.vue') },
-  { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') },
-  { path: '/posting', component: () => import('./components/PostingComponent.vue') }
+    { path: '/', component: () => import('./components/testapp.vue') },
+    { path: '/tutorial', component: () => import('./components/TutorialSite.vue') },
+    { path: '/treeform', component: () => import('./components/TreeForm.vue') },
+    { path: '/login', component: () => import('./components/LoginComponent.vue') },
+    { path: '/register', component: () => import('./components/RegisterComponent.vue') },
+    { path: '/overview', component: () => import('./components/OverviewComponent.vue') },
+    { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') }
 ];
 
 const router = createRouter({

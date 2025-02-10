@@ -1,6 +1,5 @@
 <template>
-
-  <form class="form-container" @submit.prevent="submitForm">
+  <form action="" method="POST" class="form-container">
     <h2 class="formbold-form-title">Baumregistrierung</h2>
 
     <div class="formbold-input-flex">
@@ -8,9 +7,12 @@
       <input v-model="formData.tree_type" placeholder="Baumart" class="formbold-form-input" required />
     </div>
 
-    <label class="formbold-form-label">Höhe des Baumes</label>
-    <input v-model="formData.measurement.height" placeholder="Höhe" min="1" type="number" class="formbold-form-input"
-      required />
+    <div class="formbold-input-flex">
+      <div>
+        <label for="inclination" class="formbold-form-label">Neigung</label>
+        <input type="number" name="inclination-in-degrees" id="inclination-in-degrees" class="formbold-form-input" />
+      </div>
+    </div>
 
     <label class="formbold-form-label">Neigung</label>
     <input v-model="formData.measurement.inclination" placeholder="Neigung" min="1" max="89" type="number"
@@ -33,33 +35,18 @@
     </div>
     <button type="submit">Absenden</button>
   </form>
-
 </template>
 
 <script>
 import { Geolocation } from '@capacitor/geolocation';
 
-
-//const token = localStorage.getItem("token");
-
-
 export default {
+  name: 'DistanceForm',
   data() {
     return {
-      formData: {
-        tree_type: "",
-        latitude: 0,
-        longitude: 0,
-        health_status: 1,
-        measurement: {
-          suspected_tree_type: "",
-          height: 0,
-          inclination: 0,
-          trunk_diameter: 0,
-          notes: "Notiz",
-        },
-        files: []
-      }
+      distance: '',
+      submitted: false,
+      location: null,
     };
   },
   computed: {
@@ -69,90 +56,43 @@ export default {
     }
   },
   methods: {
-    async submitForm() {
-      try {
-        this.formData.measurement.suspected_tree_type = this.formData.tree_type;
-        console.log(JSON.stringify(this.formData));
-        const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",  // API erwartet JSON-Daten
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(this.formData)
-        });
+    async handleSubmit() {
+      this.submitted = true;
+      const data = {
+        distance: this.distance,
+        location: {
+          latitude: this.location.latitude,
+          longitude: this.location.longitude,
+          accuracy: this.location.accuracy,
+        },
+      };
 
-        const result = await response.json();
-        console.log("Antwort vom Server:", result);
-      } catch (error) {
-        console.error("Fehler beim Senden des Formulars:", error);
-      }
+      const jsonData = JSON.stringify(data, null, 2);
+
+      const blob = new Blob([jsonData], { type: 'application/json' });
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'data.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
     },
+
     async getLocation() {
       try {
         const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
         if (position.coords) {
-          // Runden auf maximal sechs Nachkommastellen
           this.location = position.coords;
-          this.formData.latitude = Number(this.location.latitude.toFixed(6));
-          this.formData.longitude = Number(this.location.longitude.toFixed(6));
         }
       } catch (error) {
-        console.log("GeoLocation konnte nicht abgerufen werden:", error);
+        console.log("Test");
       }
-    },
-    addFileInput() {
-      this.formData.files.push({ filename: "", photo_data: "", description: "" });
-    },
-    handleFileUpload(event, index) {
-      this.addFileInput();
-      const file = event.target.files[0]; // Greift auf die ausgewählte Datei zu
-      if (!file) return; // Falls keine Datei gewählt wurde, nichts tun
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = () => {
-        this.formData.files[index].filename = file.name;
-        this.formData.files[index].photo_data = reader.result;
-      };
-
-      reader.onerror = (error) => {
-        console.error("Fehler beim Lesen der Datei:", error);
-      };
     }
   },
   created: function () {
     this.getLocation()
   }
-};
-</script>
-
-
-<script setup>
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-// Variable, um zu prüfen, ob der Benutzer authentifiziert ist
-const router = useRouter();
-
-// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
-const checkAuth = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
-    return;
-  }
-};
-
-// Beim Laden der Seite die Authentifizierung prüfen
-onMounted(() => {
-  checkAuth();
-});
-
-
-
-
+}
 </script>
 
 <style scoped>
