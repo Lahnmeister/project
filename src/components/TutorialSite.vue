@@ -18,30 +18,6 @@ export default {
 };
 </script>
 
-<script setup>
-
-import {onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-// Variable, um zu prüfen, ob der Benutzer authentifiziert ist
-const router = useRouter();
-  
-  // Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
-        return;
-    }
-  };
-  
-  // Beim Laden der Seite die Authentifizierung prüfen
-  onMounted(() => {
-    checkAuth();
-  });
-
-</script>
-
 <style scoped>
 @import './style.css';
 
