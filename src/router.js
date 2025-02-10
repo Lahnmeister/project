@@ -10,7 +10,7 @@ const routes = [
   { path: '/passwordreset', component: () => import('./components/ForgotPassword.vue') },
   { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') },
   { path: '/posting', component: () => import('./components/PostingComponent.vue') }
-];
+
 
 const router = createRouter({
   history: createWebHistory(),
