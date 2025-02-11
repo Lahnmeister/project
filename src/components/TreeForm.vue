@@ -69,6 +69,7 @@
 <script>
 import { Geolocation } from '@capacitor/geolocation';
 
+
 export default {
   name: 'DistanceForm',
   data() {
@@ -114,7 +115,7 @@ export default {
           this.location = position.coords;
         }
       } catch (error) {
-        console.log("Test");
+        console.log("GeoLocation konnte net bitch");
       }
     }
   },
@@ -122,6 +123,33 @@ export default {
     this.getLocation()
   }
 }
+
+
+
+</script>
+
+<script setup>
+
+import {onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+// Variable, um zu prüfen, ob der Benutzer authentifiziert ist
+const router = useRouter();
+  
+  // Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
+  const checkAuth = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+        return;
+    }
+  };
+  
+  // Beim Laden der Seite die Authentifizierung prüfen
+  onMounted(() => {
+    checkAuth();
+  });
+
 </script>
 
 <style scoped>
