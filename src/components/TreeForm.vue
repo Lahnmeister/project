@@ -23,7 +23,6 @@
     <label class="formbold-form-label">Notiz</label>
     <input v-model="formData.measurement.notes" placeholder="Notiz" />
 
-
     <input type="file" @change="handleFileUpload($event, 0)" />
     <input type="file" @change="handleFileUpload($event, 1)" />
 
