@@ -1,7 +1,7 @@
 <template>
   <nav :class="['header', darkMode ? 'dark' : 'light']">
     <ul>
-      
+
       <li v-if="!isAuthenticated"><router-link to="/login">Login</router-link></li>
       <li v-if="!isAuthenticated"><router-link to="/register">Register</router-link></li>
       <li><router-link to="/">Startseite</router-link></li>
@@ -50,7 +50,7 @@ const router = useRouter();
 const checkAuth = () => {
   const token = localStorage.getItem("token");
   if (token) {
-  isAuthenticated.value = true;
+    isAuthenticated.value = true;
   } else {
     isAuthenticated.value = false;
   }
