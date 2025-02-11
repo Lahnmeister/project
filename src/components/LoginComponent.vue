@@ -1,148 +1,84 @@
 <template>
-<div class="div-body">
-  <div class="div-container"> 
-    <form>
-      <h1>Login</h1>
+  <div class="form-container">
 
-      <div class="input-box">
-        <!-- <label>Email</label> -->
-        <input type="email" class="form-control" placeholder="Email" required/>
+    <h2 class="formbold-form-title">Login</h2>
+
+    <div class="formbold-input-flex">
+      <div>
+        <label for="email" class="formbold-form-label">E-Mail</label>
+        <input v-model="username" type="text" name="Username" id="email" placeholder="Benutzername eingeben"
+          class="formbold-form-input" required />
       </div>
+    </div>
 
-      <div class="input-box">
-        <!-- <label>Password</label> -->
-        <input type="password" class="form-control" placeholder="Password" required>
+    <div class="formbold-input-flex">
+      <div>
+        <label for="password" class="formbold-form-label">Passwort</label>
+        <input v-model="password" type="password" name="password" id="password" placeholder="Passwort eingeben"
+          class="formbold-form-input" required />
       </div>
+    </div>
 
-      <div class="remember-forgot">
-        <label for="remember">
-          <input type="checkbox" name="" id="remember" >
-            Remember me
-        </label>
-        <a href="#">Forgot password</a>
-        
-        
-      </div>
-
-      <button type="submit" class="btn">Login</button>
-
-      <div class="register-link">
-        <p>Don't have an account? <router-link to="/register" class="routing">Register</router-link></p>
-      </div>
+    <div class="formbold-input-flex remember-forgot">
+      <label for="remember">
+        <input type="checkbox" id="remember" /> Merken
+        <router-link to="/passwordreset">
+          <button class="formbold-btn">Passwort vergessen?</button>
+        </router-link>
+      </label>
+      <!--<a href="#" class="forgot-password">Passwort vergessen?</a>-->
+    </div>
 
 
-    </form>
+
+    <button @click="login" class="formbold-btn">Login</button>
+
+    <div class="register-link">
+      <!--<p>Don't have an account? <router-link to="/register">Register</router-link></p>-->
+    </div>
+
+    <p v-if="errorMessage">{{ errorMessage }}</p>
+
   </div>
-</div>
 </template>
 
-<script>
-  export default{
-    name: 'LoginComponent'
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const username = ref("");
+const password = ref("");
+const errorMessage = ref("");
+const router = useRouter();
+
+const login = async () => {
+  try {
+    const response = await fetch("https://treescope.cs.hs-fulda.de/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, // API erwartet JSON-Daten
+
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("token", data.access_token); // Speichert das Token
+      router.push("/"); // Weiterleitung nach erfolgreichem Login
+    } else {
+      errorMessage.value = data.error || "Login fehlgeschlagen";
+    }
+  } catch (error) {
+    errorMessage.value = "Netzwerkfehler oder Server nicht erreichbar";
   }
+};
 </script>
 
-<style>
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Times New Roman', Times, serif;
-}
-.div-body {
- display: flex ;
- justify-content: center;
- align-items: center;
- min-height: 100vh;
- background: url('/src//assets//img//forest.jpg') no-repeat;;
- background-size: cover;
- background-position: center;
-}
-.div-container{
-  width: 420px;
-  background-color: transparent;
-  border: 2px solid rgba(255, 255, 255, .2);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 10px rgba(255, 255, 255, .2);
-  color: #fff;
-  border-radius: 10px;
-  padding: 30px 40px;
-}
-.div-container h1{
-  font-size: 36px;
-  text-align: center;
-}
-
-.div-container .input-box{
-  position: relative;
-  width: 100%;
-  height: 50px;
-  margin: 30px 0;
-}
-.div-container .btn{
-  width: 100%;
-  height: 45px;
-  background: fff;
-  outline: none;
-  border: none;
-  border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0,0,0, .1);
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: 600;
-}
-
-.input-box input{
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  outline: none;
-  border: 2px solid rgba(255,255,255, .2);
-  border-radius: 40px;
-  font-size: 16px;
-  color: #000000;
-  padding: 20px 45px 20px 20px;
-}
-
-.div-container .register-link{
-  font-size: 14px;
-  text-align: center;
-  margin: 20px 0 15px;
-
-}
-
-.register-link p .routing{
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-.register-link p .routing:hover{
-  text-decoration: underline;
-}
-
-.input-box input::placeholder{
-  color: #ffffff;
-}
-
-.div-container .remember-forgot{
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin: -15px 0 15px;
-}
-
-.remember-forgot label input{
-  accent-color: #fff;
-  margin-right: 3px;
-}
-
-.remember-forgot a{
-  color: #fff;
-  text-decoration: none;
-}
-.remember-forgot a:hover{
-  text-decoration: underline;
-}
-
+<style scoped>
+@import './style.css';
 </style>

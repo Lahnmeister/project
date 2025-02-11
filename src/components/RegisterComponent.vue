@@ -1,38 +1,73 @@
 <template>
-    <form @submit.prevent="handleSubmit">
-        <h3>Sign Up</h3>
-
-        <div class="">
-            <label>Username</label>
-            <input type="text" v-model="username" class="" placeholder="Username" required>
+    <form @submit.prevent="handleSubmit" class="form-container">
+      <h2 class="formbold-form-title">Registrierung</h2>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="username" class="formbold-form-label">Benutzername</label>
+          <input
+            type="text"
+            id="username"
+            v-model="username"
+            class="formbold-form-input"
+            placeholder="Benutzername"
+            required
+          />
         </div>
-
-        <div class="">
-            <label>Email</label>
-            <input type="email" v-model="email" class="" placeholder="Email" required>
+      </div>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="email" class="formbold-form-label">E-Mail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class="formbold-form-input"
+            placeholder="E-Mail"
+            required
+          />
         </div>
-
-        <div class="">
-            <label>Password</label>
-            <input type="password" v-model="password" class="" placeholder="Password" required>
-        </div> 
-
-        <div class="">
-            <label>Confirm Password</label>
-            <input type="password" v-model="password_confirm" class="" placeholder="Confirm Password" required>
+      </div>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="password" class="formbold-form-label">Passwort</label>
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            class="formbold-form-input"
+            placeholder="Passwort"
+            required
+          />
         </div>
-
-        <div v-if="errorMessage" class="alert alert-danger">
-            {{ errorMessage }}
+      </div>
+  
+      <div class="formbold-input-flex">
+        <div>
+          <label for="password_confirm" class="formbold-form-label">Passwort bestätigen</label>
+          <input
+            type="password"
+            id="password_confirm"
+            v-model="password_confirm"
+            class="formbold-form-input"
+            placeholder="Passwort eingeben"
+            required
+          />
         </div>
-        <div v-if="successMessage" class="alert alert-success">
-            {{ successMessage }}
-        </div>
-
-        <button type="submit" class="">Sign Up</button>
+      </div>
+  
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <div v-if="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+  
+      <button type="submit" class="formbold-btn">Registrieren</button>
     </form>
-    
-</template>
+  </template>
 
 <script>
 
@@ -118,3 +153,7 @@
     }
 
 </script>
+
+<style scoped>
+@import './style.css';
+</style>

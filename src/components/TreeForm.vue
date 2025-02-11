@@ -1,263 +1,159 @@
 <template>
-  <form action="" method="POST">
-    <h2 class="formbold-form-title">Tree registration</h2>
 
-    <p class="formbold-policy">
-      Schwieriegkeiten beim ausfüllen? Kein Problem. Klick
-      <a href="/how-to-page">hier</a>
-      für hilfe.
-    </p>
+  <form class="form-container" @submit.prevent="submitForm">
+    <h2 class="formbold-form-title">Baumregistrierung</h2>
 
     <div class="formbold-input-flex">
-      <div>
-        <label for="name-of-measurer" class="formbold-form-label">
-          Name of the Measurer*
-        </label>
-        <div class="input-with-icon">
-          <input type="text" name="name-of-measurer" id="name-of-measurer" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Your Name" alt="Info Icon">
-        </div>
-      </div>
-      <div>
-        <label for="tree-type" class="formbold-form-label">
-          Tree type* </label>
-        <div class="input-with-icon">
-          <input type="text" name="tree-type" id="tree-type" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Baumart" alt="Info Icon">
-        </div>
-
-      </div>
+      <label class="formbold-form-label">Baumart</label>
+      <input v-model="formData.tree_type" placeholder="Baumart" class="formbold-form-input" required />
     </div>
 
-    <div class="formbold-input-flex">
-      <div>
-        <label for="Tree Height" class="formbold-form-label">
-          Tree Height* </label>
-        <div class="input-with-icon">
-          <input type="number" name="tree-height" id="tree-height" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Baumhöhe" alt="Info Icon">
-        </div>
+    <label class="formbold-form-label">Höhe des Baumes</label>
+    <input v-model="formData.measurement.height" placeholder="Höhe" min="1" type="number" class="formbold-form-input"
+      required />
 
-      </div>
-      <div>
-        <label for="phone" class="formbold-form-label">
-          Inclination in degrees* </label>
-        <div class="input-with-icon">
-          <input type="number" name="inclination-in-degrees" id="inclination-in-degrees" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Um wie viel Grad der Baum geneigt ist"
-            alt="Info Icon">
-        </div>
+    <label class="formbold-form-label">Neigung</label>
+    <input v-model="formData.measurement.inclination" placeholder="Neigung" min="1" max="89" type="number"
+      class="formbold-form-input" required />
 
-      </div>
+    <label class="formbold-form-label">Durchmesser des Stamms</label>
+    <input v-model="formData.measurement.trunk_diameter" placeholder="Durchmesser des Stamms" min="1" type="number"
+      class="formbold-form-input" required />
+
+    <label class="formbold-form-label">Notiz</label>
+    <input v-model="formData.measurement.notes" placeholder="Notiz" />
+
+    <input type="file" @change="handleFileUpload($event, 0)" />
+    <input type="file" @change="handleFileUpload($event, 1)" />
+
+    <div v-if="location">
+      <iframe :src="iframeUrl" style="border: 1px solid black"></iframe>
+      <br />
     </div>
-
-    <div class="formbold-input-flex">
-      <div>
-        <label for="trunk-diameter-in-cm" class="formbold-form-label">
-          Trunk Diameter in cm* </label>
-        <div class="input-with-icon">
-          <input type="text" name="trunk-diameter-in-cm" id="trunk-diameter-in-cm" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Baumdurchmesser in cm" alt="Info Icon">
-        </div>
-
-      </div>
-    </div>
-
-    <div class="formbold-input-flex">
-      <div>
-        <label for="tree1" class="formbold-form-label">
-          Tree1* </label>
-        <div class="input-with-icon">
-          <input type="file" name="tree1" id="tree1" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Erstes Bild vom Baum" alt="Info Icon">
-        </div>
-
-      </div>
-
-      <div>
-        <label for="tree2" class="formbold-form-label">
-          Tree2* </label>
-        <div class="input-with-icon">
-          <input type="file" name="tree2" id="tree2" class="formbold-form-input" />
-          <img src="@/assets/info-icon-50.png" class="icon" title="Zweites Bild vom Baum" alt="Info Icon">
-        </div>
-
-      </div>
-    </div>
-
-    <div class="formbold-input-flex">
-      <div>
-        <label for="location" class="formbold-form-label">
-          Your location </label>
-        <!-- Anzeige der Karte -->
-        <div v-if="location">
-          <iframe :src="iframeUrl" style="border: 1px solid black"></iframe>
-          <br />
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <button class="formbold-btn">Register tree</button>
+    <button type="submit">Absenden</button>
   </form>
+
 </template>
 
 <script>
 import { Geolocation } from '@capacitor/geolocation';
 
+
+//const token = localStorage.getItem("token");
+
+
 export default {
-  name: 'DistanceForm',
   data() {
-    // Initialisierung
     return {
-      distance: '',
-      submitted: false,
-      location: null,
+      formData: {
+        tree_type: "",
+        latitude: 0,
+        longitude: 0,
+        health_status: 1,
+        measurement: {
+          suspected_tree_type: "",
+          height: 0,
+          inclination: 0,
+          trunk_diameter: 0,
+          notes: "Notiz",
+        },
+        files: []
+      }
     };
   },
   computed: {
-    // Karte mit gegebenem Standort ausgeben
     iframeUrl() {
       const { latitude, longitude } = this.location;
       return `https://www.openstreetmap.org/export/embed.html?bbox=${longitude}%2C${latitude}%2C${longitude}%2C${latitude}&layer=mapnik&marker=${latitude}%2C${longitude}`;
     }
-  }, methods: {
-    async handleSubmit() {
-      // Umschreiben der JSON
-      this.submitted = true;
-      const data = {
-        distance: this.distance,
-        location: {
-          latitude: this.location.latitude,
-          longitude: this.location.longitude,
-          accuracy: this.location.accuracy,
-        },
-      };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        this.formData.measurement.suspected_tree_type = this.formData.tree_type;
+        console.log(JSON.stringify(this.formData));
+        const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",  // API erwartet JSON-Daten
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(this.formData)
+        });
 
-      const jsonData = JSON.stringify(data, null, 2);
-
-      const blob = new Blob([jsonData], { type: 'application/json' });
-
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'data.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
+        const result = await response.json();
+        console.log("Antwort vom Server:", result);
+      } catch (error) {
+        console.error("Fehler beim Senden des Formulars:", error);
+      }
     },
-
-    // Standort abrufen
     async getLocation() {
       try {
         const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
         if (position.coords) {
+          // Runden auf maximal sechs Nachkommastellen
           this.location = position.coords;
-        } else {
-          console.log("Test");
+          this.formData.latitude = Number(this.location.latitude.toFixed(6));
+          this.formData.longitude = Number(this.location.longitude.toFixed(6));
         }
       } catch (error) {
-        console.log("Test");
+        console.log("GeoLocation konnte nicht abgerufen werden:", error);
       }
+    },
+    addFileInput() {
+      this.formData.files.push({ filename: "", photo_data: "", description: "" });
+    },
+    handleFileUpload(event, index) {
+      this.addFileInput();
+      const file = event.target.files[0]; // Greift auf die ausgewählte Datei zu
+      if (!file) return; // Falls keine Datei gewählt wurde, nichts tun
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.formData.files[index].filename = file.name;
+        this.formData.files[index].photo_data = reader.result;
+      };
+
+      reader.onerror = (error) => {
+        console.error("Fehler beim Lesen der Datei:", error);
+      };
     }
   },
   created: function () {
     this.getLocation()
   }
-}
+};
 </script>
 
 
-<style>
-.formbold-form-title {
-  color: #07074d;
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 35px;
-  width: 60%;
-  margin-bottom: 30px;
-}
+<script setup>
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-.formbold-form-input {
-  text-align: center;
-  width: 70%;
-  padding: 8px 22px;
-  border-radius: 5px;
-  border: 1px solid #dde3ec;
-  background: #ffffff;
-  font-weight: 500;
-  font-size: 15px;
-  color: #536387;
-  outline: none;
-  resize: none;
-}
+// Variable, um zu prüfen, ob der Benutzer authentifiziert ist
+const router = useRouter();
 
-.formbold-input-flex {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 15px;
-}
+// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
+const checkAuth = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+    return;
+  }
+};
 
-.formbold-input-flex>div {
-  width: 50%;
-}
+// Beim Laden der Seite die Authentifizierung prüfen
+onMounted(() => {
+  checkAuth();
+});
 
-.formbold-form-label {
-  color: #536387;
-  font-size: 14px;
-  line-height: 24px;
-  display: block;
-  margin-bottom: 10px;
-}
 
-.formbold-btn {
-  text-align: center;
-  width: 100%;
-  font-size: 16px;
-  border-radius: 5px;
-  padding: 14px 25px;
-  border: none;
-  font-weight: 500;
-  background-color: #6a64f1;
-  color: white;
-  cursor: pointer;
-  margin-top: 25px;
-}
 
-.formbold-btn:hover {
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-}
 
-.tooltip-icon {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
+</script>
 
-.input-with-icon {
-  display: flex;
-  align-items: center;
-}
-
-.input-with-icon input {
-  flex: 1;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.input-with-icon .icon {
-  width: 15px;
-  /* Festlegen einer festen Größe für das Icon */
-  height: 15px;
-  /* Sicherstellen, dass das Bild eine feste Größe hat */
-  object-fit: contain;
-  /* Bild passt sich ohne Verzerrung an */
-  margin-left: 8px;
-  /* Abstand zwischen Input und Icon */
-}
+<style scoped>
+@import './style.css';
 </style>
