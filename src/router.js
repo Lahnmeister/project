@@ -11,8 +11,9 @@ const routes = [
   { path: '/passwordreset', component: () => import('./components/ForgotPassword.vue') },
   { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') },
   { path: '/faq', component: () => import('./components/FAQComponent.vue') },
-  { path: '/how-to-page', component: () => import('./components/How-to-Component.vue') }
-
+  { path: '/how-to-page', component: () => import('./components/How-to-Component.vue') },
+  { path: '/posting', component: () => import('./components/PostingComponent.vue') }
+  
 ];
 
 const router = createRouter({
