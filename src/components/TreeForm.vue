@@ -45,6 +45,7 @@ import { Geolocation } from '@capacitor/geolocation';
 export default {
   data() {
     return {
+      location: null,
       formData: {
         tree_type: "",
         latitude: 0,
@@ -55,7 +56,7 @@ export default {
           height: 0,
           inclination: 0,
           trunk_diameter: 0,
-          notes: "Notiz",
+          notes: null,
         },
         files: []
       }
