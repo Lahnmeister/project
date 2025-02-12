@@ -2,11 +2,13 @@
   <nav :class="['header', darkMode ? 'dark' : 'light']">
     <ul>
       <li v-if="!isAuthenticated"><router-link to="/login">Login</router-link></li>
+      <li v-if="!isAuthenticated"><router-link to="/register">Register</router-link></li>
       <li><router-link to="/">Startseite</router-link></li>
+      <li v-if="isAuthenticated"><router-link to="/tutorial">Tutorial</router-link></li>
       
       <li v-if="isAuthenticated"><router-link to="/treeform">Baum Form</router-link></li>
       <li v-if="isAuthenticated"><router-link to="/map">Übersicht</router-link></li>
-      <li><router-link to="/user">User</router-link></li>
+      <li v-if="isAuthenticated"><router-link to="/user">User</router-link></li>
       <button v-if="isAuthenticated" class="submit-button" @click="logout">Ausloggen</button>
       
     </ul>
