@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <HeaderComponent />
+    <!-- Header nur anzeigen, wenn showHeader true ist.-->
+    <HeaderComponent v-if="showHeader" :key="$route.fullPath" />
 
-    <!-- Dropdown-Menü nur auf Folgenden Seiten Anzeigen-->
+    <!-- Dropdown-Menü nur auf folgenden Seiten anzeigen -->
     <div v-if="showDropdown">
       <select v-model="selectedView" @change="navigateToView">
         <option value="map">Karten Ansicht</option>
@@ -26,27 +27,32 @@ export default {
   },
   data() {
     return {
-      selectedView: 'map',  // Standardansicht
+      selectedView: 'map', // Standardansicht
     };
   },
   computed: {
     showDropdown() {
-      // Prüfen ob aktueller Routenname angegebenen ist
+      // Dropdown nur anzeigen, wenn der aktuelle Routename 'map', 'table' oder 'card' ist
       return ['map', 'table', 'card'].includes(this.$route.name);
+    },
+    showHeader() {
+      // Header nicht anzeigen, wenn der aktuelle Pfad /login oder /register ist
+      const hideHeaderRoutes = ["/login", "/register"];
+      return !hideHeaderRoutes.includes(this.$route.path);
     },
   },
   watch: {
     // Überwacht den Routenwechsel und passt die Dropdownliste an
-    '$route.name': function(newRoute) {
+    '$route.name'(newRoute) {
       if (['map', 'table', 'card'].includes(newRoute)) {
         this.selectedView = newRoute;
       }
-    }
+    },
   },
   methods: {
     navigateToView(event) {
       const selectedView = event.target.value;
-      // Navigiere zur entsprechenden Route 
+      // Navigiere zur entsprechenden Route
       this.$router.push({ name: selectedView });
     },
   },
