@@ -45,7 +45,6 @@ import { Geolocation } from '@capacitor/geolocation';
 export default {
   data() {
     return {
-      location: null,
       formData: {
         tree_type: "",
         latitude: 0,
