@@ -28,16 +28,24 @@
         <tbody>
           <tr v-for="tree in filteredTrees" :key="tree.id">
             <td>
-              <img :src="tree.imageUrl" alt="Bild von {{ tree.species }}" class="tree-image" />
+              <template v-if="getImageUrl(tree)">
+                <img :src="getImageUrl(tree)" 
+                     alt="Bild von {{ tree.tree_type }}" 
+                     class="tree-image" />
+              </template>
+              <template v-else>
+                Kein Bild vorhanden
+              </template>
             </td>
-            <td>{{ tree.species }}</td>
-            <td>{{ tree.location }}</td>
-            <td>{{ tree.date }}</td>
+            <td>{{ tree.tree_type }}</td>
+            <!-- Method Getlocation called -->
+            <td>{{ getLocation(tree) }}</td>
+            <td>{{ formatDate(tree.created_at) }}</td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Unsichtbares Datumselement -->
+      <!-- Date element -->
       <input
         type="date"
         ref="dateInput"
@@ -46,7 +54,7 @@
         style="visibility: hidden; position: absolute;"
       />
 
-      <!-- Tree species dropdown -->
+      <!-- Dropdown for tree species -->
       <div
         class="dropdown-container hover-dropdown"
         v-if="dropdownOpen === 'species'"
@@ -80,7 +88,7 @@
         </div>
       </div>
 
-      <!-- Location dropdown -->
+      <!-- Dropdown for locations -->
       <div
         class="dropdown-container hover-dropdown"
         v-if="dropdownOpen === 'location'"
@@ -95,11 +103,7 @@
             class="dropdown-search"
           />
           <label>
-            <input
-              type="checkbox"
-              v-model="selectAllLocations"
-              @change="toggleSelectAllLocations"
-            />
+            <input type="checkbox" v-model="selectAllLocations" @change="toggleSelectAllLocations" />
             Alles auswählen
           </label>
           <div class="checkbox-list">
@@ -123,25 +127,21 @@
 
 <script>
 export default {
+  name: "TableView",
   data() {
     return {
-      selectedDate: '',
+      selectedDate: "",
       selectedSpecies: [],
       selectedLocations: [],
       selectAllSpecies: false,
       selectAllLocations: false,
-      speciesSearch: '',
-      locationSearch: '',
-      dropdownOpen: null, // 'species' or 'location'
+      speciesSearch: "",
+      locationSearch: "",
+      dropdownOpen: null,
       calendarOpen: false,
       dropdownPosition: {},
       filteredTrees: [],
-      trees: [
-        { id: 1, species: 'Eiche', height: 15.5, location: 'Fulda', date: '2024-12-01', imageUrl: require('@/assets/img/Eiche.jpg') },
-        { id: 2, species: 'Buche', height: 20.2, location: 'Berlin', date: '2024-11-20', imageUrl: require('@/assets/img/Buche.jpg') },
-        { id: 3, species: 'Ahorn', height: 10.8, location: 'Hamburg', date: '2024-12-05', imageUrl: require('@/assets/img/Ahorn.jpg') },
-        { id: 4, species: 'Kirsche', height: 30.2, location: 'München', date: '2024-12-05', imageUrl: require('@/assets/img/Kirsche.jpg') }
-      ]
+      trees: [] 
     };
   },
   computed: {
@@ -156,19 +156,29 @@ export default {
       );
     },
     uniqueSpecies() {
-      return [...new Set(this.trees.map(tree => tree.species))];
+      return [...new Set(this.trees.map(tree => tree.tree_type))];
     },
     uniqueLocations() {
-      return [...new Set(this.trees.map(tree => tree.location))];
+      return [
+        ...new Set(
+          this.trees.map(
+            tree => tree.locationName || (tree.latitude + ", " + tree.longitude)
+          )
+        )
+      ];
     },
     averageHeight() {
       if (!this.filteredTrees.length) return 0;
-      const totalHeight = this.filteredTrees.reduce((sum, tree) => sum + tree.height, 0);
+      // Calculate the average
+      const totalHeight = this.filteredTrees.reduce((sum, tree) => {
+        return sum + Number(tree.height);
+      }, 0);
       return (totalHeight / this.filteredTrees.length).toFixed(2);
     }
   },
   methods: {
     openNativeDatePicker() {
+      if (this.filteredTrees.length === 0) return;
       this.$nextTick(() => {
         if (this.$refs.dateInput.showPicker) {
           this.$refs.dateInput.showPicker();
@@ -178,6 +188,7 @@ export default {
       });
     },
     toggleDropdown(type, event) {
+      if (this.filteredTrees.length === 0) return;
       this.dropdownOpen = this.dropdownOpen === type ? null : type;
       this.calendarOpen = false;
       this.setDropdownPosition(event);
@@ -192,12 +203,14 @@ export default {
     },
     updateFilteredTrees() {
       this.filteredTrees = this.trees.filter(tree => {
-        const matchesDate = this.selectedDate ? tree.date === this.selectedDate : true;
+        const treeDate = tree.created_at ? tree.created_at.substring(0, 10) : "";
+        const matchesDate = this.selectedDate ? treeDate === this.selectedDate : true;
         const matchesSpecies = this.selectedSpecies.length
-          ? this.selectedSpecies.includes(tree.species)
+          ? this.selectedSpecies.includes(tree.tree_type)
           : true;
+        const treeLocation = tree.locationName || (tree.latitude + ", " + tree.longitude);
         const matchesLocation = this.selectedLocations.length
-          ? this.selectedLocations.includes(tree.location)
+          ? this.selectedLocations.includes(treeLocation)
           : true;
         return matchesDate && matchesSpecies && matchesLocation;
       });
@@ -205,35 +218,127 @@ export default {
     closeDropdowns() {
       this.dropdownOpen = null;
       this.calendarOpen = false;
-    },   
-
+    },
     setDropdownPosition(event) {
-      // Stelle sicher, dass das Dropdown relativ zum <th>-Element ausgerichtet wird
-      const header = event.target.closest('th'); // Findet das übergeordnete th-Element
-      const rect = header.getBoundingClientRect(); // Position des th-Elements
+      const header = event.target.closest("th");
+      const rect = header.getBoundingClientRect();
       const dropdownHeight = 250;
-
-      const top = rect.bottom + window.scrollY - 200; // Basis für die vertikale Position
-      const left = rect.left + window.scrollX; // Horizontale Position
-
+      let top = rect.bottom + window.scrollY - 200;
+      let left = rect.left + window.scrollX;
+      if (top + dropdownHeight > window.innerHeight) {
+        top = rect.top + window.scrollY - dropdownHeight;
+      }
+      if (left + 250 > window.innerWidth) {
+        left = rect.left + window.scrollX - 250;
+      }
       this.dropdownPosition = {
         top: `${top}px`,
-        left: `${left}px`,
+        left: `${left}px`
       };
-
-      // Prüfen, ob das Dropdown aus dem Fenster ragt
-      if (top + dropdownHeight > window.innerHeight) {
-        this.dropdownPosition.top = `${rect.top + window.scrollY - dropdownHeight}px`;
+    },
+    async fetchTrees() {
+      try {
+        const token = localStorage.getItem("token");
+        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree-wm";
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            ...(token && { Authorization: `Bearer ${token}` })
+          }
+        });
+        if (!response.ok) {
+          console.error("Fehler beim Laden der Baumdaten");
+          return;
+        }
+        const data = await response.json();
+        console.log("Serverantwort:", data);
+        let allTrees = data.tree_wm || [];
+        const currentUserId = this.getCurrentUserId(token);
+        // Filters the trees of the registered user
+        this.trees = allTrees.filter(tree =>
+          tree.initial_creator_id === currentUserId &&
+          tree.latitude && tree.longitude &&
+          !isNaN(parseFloat(tree.latitude)) && !isNaN(parseFloat(tree.longitude))
+        );
+        //Set measurements, reverse geocoding and image
+        await Promise.all(
+          this.trees.map(async (tree) => {
+            const measurement = (tree.measurements && tree.measurements.length > 0)
+              ? tree.measurements[0]
+              : null;
+            tree.height = measurement ? measurement.height : "";
+            tree.locationName = await this.reverseGeocode(parseFloat(tree.latitude), parseFloat(tree.longitude));
+            tree.imageUrl = this.getImageUrl(tree);
+          })
+        );
+        this.updateFilteredTrees();
+        this.addMarkers();
+      } catch (error) {
+        console.error("Netzwerkfehler:", error);
       }
-
-      if (left + 250 > window.innerWidth) {
-        this.dropdownPosition.left = `${rect.left + window.scrollX - 250}px`;
+    },
+    getCurrentUserId(token) {
+      if (!token) return null;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.id;
+      } catch (error) {
+        console.error("Fehler beim Auslesen der Benutzer-ID aus dem Token:", error);
+        return null;
       }
+    },
+    async reverseGeocode(lat, lon) {
+      try {
+        if (!lat || !lon || isNaN(lat) || isNaN(lon)) return "";
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+        );
+        const result = await response.json();
+        if (result.address) {
+          return result.address.city || result.address.town || result.address.village || "";
+        }
+        return "";
+      } catch (error) {
+        console.error("Reverse-Geocoding-Fehler:", error);
+        return "";
+      }
+    },
+    getImageUrl(tree) {
+      // URL for the pictures
+      const baseUrl = "https://treescope.cs.hs-fulda.de/static/uploads";
+      if (tree.files && tree.files.length > 0 && tree.files[0].photo_path) {
+        let photoPath = tree.files[0].photo_path.trim();
+        if (photoPath.startsWith("/uploads/")) {
+          photoPath = photoPath.replace(/^\/uploads\//, "");
+        } else if (photoPath.startsWith("/static/uploads/")) {
+          photoPath = photoPath.replace(/^\/static\/uploads\//, "");
+        }
+        return `${baseUrl}/${photoPath}`;
+      }
+      return null;
+    },
+    formatDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    },
+    addMarkers() {
+    },
+    //Method for the location edition
+    getLocation(tree) { 
+      if (!tree.locationName || tree.locationName.trim() === "" || tree.locationName.trim() === "0") {
+        return "Keine Angabe";
+      }
+      return tree.locationName;
     }
   },
   created() {
-    this.updateFilteredTrees();
-  },
+    this.fetchTrees();
+  }
 };
 </script>
 
@@ -312,7 +417,8 @@ const router = useRouter();
   width: 100%;
 }
 
-th, td {
+th,
+td {
   border: 2px solid black;
   text-align: left;
   cursor: default;
@@ -330,16 +436,8 @@ th {
 }
 
 .tree-image {
-  width: 75px;
-  height: 75px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-}
-
-.calendar-container {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  width: 250px;
 }
 </style>
