@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
     { path: '/', component: () => import('./components/testapp.vue') },
-    { path: '/tutorial', component: () => import('./components/TutorialSite.vue') },
-    { path: '/treeform', component: () => import('./components/TreeForm.vue') },
+
     { path: '/login', component: () => import('./components/LoginComponent.vue') },
-    { path: '/register', component: () => import('./components/RegisterComponent.vue') },
-    { path: '/overview', component: () => import('./components/OverviewComponent.vue') },
-    { path: '/overview2', component: () => import('./components/OverviewCardComponent.vue') }
+    { path: '/table',name:"table", component: () => import('./components/OverviewComponent.vue') },
+    { path: '/card', name:"card", component: () => import('./components/OverviewCardComponent.vue') },
+    { path: '/map', name:"map", component: () => import('./components/OverviewMapComponent.vue') },
+    { path: '/treeform', component: () => import('./components/TreeForm.vue') },
 ];
 
 const router = createRouter({
