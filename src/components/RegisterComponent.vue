@@ -63,6 +63,7 @@
     </div>
     <div v-if="successMessage" class="alert alert-success">
       {{ successMessage }}
+      <p>Du wirst in Kürze zur Startseite weitergeleitet...</p>
     </div>
 
     <button type="submit" class="formbold-btn">Registrieren</button>
@@ -125,10 +126,8 @@ export default {
         return;
       }
 
-      // Lese die Schrittlänge aus dem LocalStorage und stelle sicher, dass sie als Zahl vorliegt.
       const derivedStepSize = localStorage.getItem("derivedStepSize");
       const manualStepSize = localStorage.getItem("manualStepSize");
-      // Falls vorhanden, in Zahl umwandeln. Andernfalls auf null setzen.
       this.stepLength = derivedStepSize ? Number(derivedStepSize) : (manualStepSize ? Number(manualStepSize) : null);
 
       console.log("Type of stepLength:", typeof this.stepLength);
@@ -146,7 +145,8 @@ export default {
         if (response.status === 201) {
           console.log("Registrierung erfolgreich:", response.data);
           this.errorMessage = "";
-          this.successMessage = "Registrierung erfolgreich!";
+          this.successMessage = "Registrierung erfolgreich! Bitte überprüfe deine E-Mail und bestätige deine Adresse, bevor du dich anmeldest.";
+          this.redirectToHome();
         } else {
           throw new Error("Unerwarteter Fehler");
         }
@@ -159,6 +159,12 @@ export default {
         }
         this.successMessage = "";
       }
+    },
+
+    redirectToHome() {
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 5000); // Weiterleitung nach 5 Sekunden
     }
   }
 };

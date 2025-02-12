@@ -40,7 +40,7 @@
 
       <div v-else-if="currentPage === 5">
         <h3 v-if="!serverErrorMessage">Die Registrierung ist vollendet!</h3>
-        <p v-if="!serverErrorMessage">Du kannst dich nun am Citizen-Science-Projekt beteiligen.</p>
+        <p v-if="!serverErrorMessage">Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren.</p>
         <h3 v-else>Fehler bei der Registrierung</h3>
         <p v-if="serverErrorMessage" style="color: red;">{{ serverErrorMessage }}</p>
         <button @click="prevPage" v-if="serverErrorMessage">Zurück</button>
