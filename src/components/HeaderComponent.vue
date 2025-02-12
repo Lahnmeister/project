@@ -7,7 +7,9 @@
       
       <li v-if="isAuthenticated"><router-link to="/treeform">Baum Form</router-link></li>
       <li v-if="isAuthenticated"><router-link to="/map">Übersicht</router-link></li>
+      <li><router-link to="/user">User</router-link></li>
       <button v-if="isAuthenticated" class="submit-button" @click="logout">Ausloggen</button>
+      
     </ul>
     <label class="switch">
       <input type="checkbox" v-model="darkMode" @change="toggleDarkMode" />
