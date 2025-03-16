@@ -30,14 +30,14 @@
             <td>
               <template v-if="getImageUrl(tree)">
                 <img :src="getImageUrl(tree)" 
-                     alt="Bild von {{ tree.tree_type }}" 
+                     alt="Bild von {{ tree.tree_type.name }}" 
                      class="tree-image" />
               </template>
               <template v-else>
                 Kein Bild vorhanden
               </template>
             </td>
-            <td>{{ tree.tree_type }}</td>
+            <td>{{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}</td>
             <!-- Method Getlocation called -->
             <td>{{ getLocation(tree) }}</td>
             <td>{{ formatDate(tree.created_at) }}</td>
@@ -156,7 +156,7 @@ export default {
       );
     },
     uniqueSpecies() {
-      return [...new Set(this.trees.map(tree => tree.tree_type))];
+      return [...new Set(this.trees.map(tree => tree.tree_type.name))];
     },
     uniqueLocations() {
       return [
@@ -206,7 +206,7 @@ export default {
         const treeDate = tree.created_at ? tree.created_at.substring(0, 10) : "";
         const matchesDate = this.selectedDate ? treeDate === this.selectedDate : true;
         const matchesSpecies = this.selectedSpecies.length
-          ? this.selectedSpecies.includes(tree.tree_type)
+          ? this.selectedSpecies.includes(tree.tree_type.name)
           : true;
         const treeLocation = tree.locationName || (tree.latitude + ", " + tree.longitude);
         const matchesLocation = this.selectedLocations.length
@@ -239,7 +239,7 @@ export default {
     async fetchTrees() {
       try {
         const token = localStorage.getItem("token");
-        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree-wm";
+        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree";
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -253,7 +253,7 @@ export default {
         }
         const data = await response.json();
         console.log("Serverantwort:", data);
-        let allTrees = data.tree_wm || [];
+        let allTrees = data.trees || [];
         const currentUserId = this.getCurrentUserId(token);
         // Filters the trees of the registered user
         this.trees = allTrees.filter(tree =>
