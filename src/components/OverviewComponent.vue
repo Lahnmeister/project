@@ -46,8 +46,8 @@
       </table>
 
       <!-- Date element -->
-      <input type="date" ref="dateInput" v-model="selectedDate" @change="updateFilteredTrees"
-        style="visibility: hidden; position: absolute;" />
+      <input type="date" ref="dateInput" v-model="selectedDate" @focus="openNativeDatePicker"
+        @change="updateFilteredTrees" style="visibility: hidden; position: absolute;" />
 
       <!-- Dropdown for tree species -->
       <div class="dropdown-container hover-dropdown" v-if="dropdownOpen === 'species'" :style="dropdownPosition"
@@ -145,14 +145,12 @@ export default {
   },
   methods: {
     openNativeDatePicker() {
-      if (this.filteredTrees.length === 0) return;
-      this.$nextTick(() => {
-        if (this.$refs.dateInput.showPicker) {
+      if (this.$refs.dateInput) {
+        this.$refs.dateInput.value = '';
+        this.$nextTick(() => {
           this.$refs.dateInput.showPicker();
-        } else {
-          this.$refs.dateInput.focus();
-        }
-      });
+        });
+      }
     },
     toggleDropdown(type, event) {
       if (this.filteredTrees.length === 0) return;
