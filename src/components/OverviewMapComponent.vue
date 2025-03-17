@@ -75,7 +75,7 @@ export default {
       try {
         const token = localStorage.getItem("token");
 
-        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree-wm";
+        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree";
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -90,7 +90,7 @@ export default {
         const data = await response.json();
         console.log("Serverantwort:", data);
 
-        let allTrees = data.tree_wm || [];
+        let allTrees = data.trees || [];
         // Filters trees so that only those of the logged-in user are displayed
         const currentUserId = this.getCurrentUserId(token);
         this.trees = allTrees.filter(tree => tree.initial_creator_id === currentUserId);
@@ -181,10 +181,10 @@ export default {
           const marker = L.marker([tree.latitude, tree.longitude]).addTo(this.map);
           const popupContent = `
             <div style="text-align:center;">
-              <h3 style="margin-bottom:0.3em;">${tree.tree_type}</h3>
+              <h3 style="margin-bottom:0.3em;">${tree.tree_type.name} <br> (${tree.tree_type.scientific_name}) </h3>
               <img 
                 src="${this.getImageUrl(tree) || ''}"
-                alt="${tree.tree_type}"
+                alt="${tree.tree_type.name}"
                 style="width:100px; max-height:80px; object-fit:cover; margin-bottom:0.5em;"
               />
               <p style="margin:0;"><strong>Ort:</strong> ${

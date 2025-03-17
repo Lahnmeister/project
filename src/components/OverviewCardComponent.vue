@@ -3,12 +3,12 @@
     <div class="card" v-for="tree in filteredTrees" :key="tree.id">
       <img 
         :src="tree.imageUrl" 
-        alt="Bild von {{ tree.tree_type }}" 
+        alt="Bild von {{ tree.tree_type.name }}" 
         class="card-image"
         @click="toggleImage(tree)"
       />
       <div class="card-content">
-        <h2>{{ tree.tree_type }}</h2>
+        <h2>{{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}</h2>
         <p>
           <strong>Standort:</strong>
           {{ tree.locationName ? tree.locationName : "Keine Angaben" }}
@@ -53,7 +53,7 @@ export default {
     async fetchTrees() {
       try {
         const token = localStorage.getItem("token");
-        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree-wm";
+        const url = "https://treescope.cs.hs-fulda.de/api/v1/trees/user-tree";
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -67,7 +67,7 @@ export default {
         }
         const data = await response.json();
         console.log("Serverantwort:", data);
-        let allTrees = data.tree_wm || [];
+        let allTrees = data.trees || [];
         const currentUserId = this.getCurrentUserId(token);
         // Only shows the trees of the registered user
         this.trees = allTrees.filter(tree =>
