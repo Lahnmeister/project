@@ -7,11 +7,7 @@
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="steps">Anzahl der Schritte</label>
-          <input type="number" id="steps" v-model.number="steps" required min="0" step="1" placeholder="z. B. 3" />
-        </div>
-
-        <div class="form-group">
-          <button type="submit" class="submit-button">Absenden</button>
+          <input type="number" id="steps" v-model.number="steps" @input="onInputChange" required min="0" step="1" placeholder="z. B. 3" />
         </div>
       </form>
 
@@ -57,12 +53,12 @@ export default {
       submitted: false,
       location: null,
       time: null,
-      stepLength: parseFloat(localStorage.getItem("derivedStepSize") || localStorage.getItem("manualStepSize") || "0") / 100, 
     };
   },
   computed: {
     calculatedDistance() {
-      return (this.steps * this.stepLength).toFixed(2);
+      const stepLenght = parseFloat(localStorage.getItem("step_size") || "0") / 100
+      return (this.steps * stepLenght).toFixed(2);
     },
     iframeUrl() {
       const { latitude, longitude } = this.location;
@@ -82,26 +78,6 @@ export default {
         setTimeout(this.getTimeByIP, 5000);
       }
     },
-    async handleSubmit() {
-      this.submitted = true;
-      const data = {
-        steps: this.steps,
-        distance: this.calculatedDistance,
-        time: this.time,
-        location: this.location ? {
-          latitude: this.location.latitude,
-          longitude: this.location.longitude,
-          accuracy: this.location.accuracy,
-        } : null,
-      };
-      const jsonData = JSON.stringify(data, null, 2);
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'data.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    },
     async getLocation() {
       try {
         const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
@@ -111,6 +87,9 @@ export default {
       } catch (error) {
         console.log("Fehler beim Abrufen des Standorts");
       }
+    },
+    onInputChange() {
+      this.submitted = true;
     },
   },
 };
