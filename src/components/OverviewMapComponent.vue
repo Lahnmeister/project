@@ -20,7 +20,7 @@ export default {
   name: "TreesMap",
   data() {
     return {
-      trees: [], 
+      trees: [],
       map: null,
       markers: [],
     };
@@ -187,13 +187,13 @@ export default {
                 alt="${tree.tree_type.name}"
                 style="width:100px; max-height:80px; object-fit:cover; margin-bottom:0.5em;"
               />
-              <p style="margin:0;"><strong>Ort:</strong> ${
-                tree.locationName
-                  ? `${tree.locationName} (${tree.latitude}, ${tree.longitude})`
-                  : `${tree.latitude}, ${tree.longitude}`
-              }</p>
+              <p style="margin:0;"><strong>Ort:</strong> ${tree.locationName
+              ? `${tree.locationName} (${tree.latitude}, ${tree.longitude})`
+              : `${tree.latitude}, ${tree.longitude}`
+            }</p>
               <p style="margin:0;"><strong>Höhe:</strong> ${tree.height} m</p>
               <p style="margin:0;"><strong>Datum:</strong> ${this.formatDate(tree.created_at)}</p>
+              <p style="margin:0;"><strong>CO₂ Gespeichert:</strong>  ${tree.co2_stored.toFixed(2)} kg</p>
             </div>
           `;
           marker.bindPopup(popupContent);
@@ -237,6 +237,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 #map {
   width: 100%;
   height: 100%;

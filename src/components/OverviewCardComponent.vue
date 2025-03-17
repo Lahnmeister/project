@@ -1,12 +1,8 @@
 <template>
   <div class="scroll-container">
     <div class="card" v-for="tree in filteredTrees" :key="tree.id">
-      <img 
-        :src="tree.imageUrl" 
-        alt="Bild von {{ tree.tree_type.name }}" 
-        class="card-image"
-        @click="toggleImage(tree)"
-      />
+      <img :src="tree.imageUrl" alt="Bild von {{ tree.tree_type.name }}" class="card-image"
+        @click="toggleImage(tree)" />
       <div class="card-content">
         <h2>{{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}</h2>
         <p>
@@ -15,6 +11,7 @@
         </p>
         <p><strong>Höhe:</strong> {{ tree.height }} m</p>
         <p><strong>Datum:</strong> {{ formatDate(tree.created_at) }}</p>
+        <p><strong>CO₂ Gespeichert:</strong> {{ tree.co2_stored.toFixed(2) }} kg</p>
       </div>
     </div>
   </div>
@@ -27,7 +24,7 @@ export default {
     return {
       selectedDate: "",
       filteredTrees: [],
-      trees: [] 
+      trees: []
     };
   },
   computed: {
@@ -173,32 +170,32 @@ export default {
 
 <script setup>
 
-import {onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // Variable, um zu prüfen, ob der Benutzer authentifiziert ist
 const router = useRouter();
-  
-  // Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
-        return;
-    }
-  };
-  
-  // Beim Laden der Seite die Authentifizierung prüfen
-  onMounted(() => {
-    checkAuth();
-  });
+
+// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
+const checkAuth = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+    return;
+  }
+};
+
+// Beim Laden der Seite die Authentifizierung prüfen
+onMounted(() => {
+  checkAuth();
+});
 
 </script>
 
 <style scoped>
 /* Standard styling for mobile devices */
 .scroll-container {
-  height: 100vh; 
+  height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
@@ -257,6 +254,7 @@ const router = useRouter();
     overflow-y: visible;
     scroll-snap-type: none;
   }
+
   .card {
     height: auto;
     margin: 20px auto;
