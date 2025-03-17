@@ -264,14 +264,17 @@ export default {
         alert('Bitte wählen Sie Ihr Geschlecht aus.');
         return;
       }
-      let stepSize;
-      const matching = this.stepLengths.find(row => row.height >= this.userHeight);
-      if (matching) {
-        stepSize = this.userGender === 'female' ? matching.female : matching.male;
-      } else {
-        const last = this.stepLengths[this.stepLengths.length - 1];
-        stepSize = this.userGender === 'female' ? last.female : last.male;
+      let selectedRow = null;
+      for (let i = this.stepLengths.length - 1; i >= 0; i--) {
+        if (this.stepLengths[i].height <= this.userHeight) {
+          selectedRow = this.stepLengths[i];
+          break;
+        }
       }
+      if (!selectedRow) {
+        selectedRow = this.stepLengths[0];
+      }
+      const stepSize = this.userGender === 'female' ? selectedRow.female : selectedRow.male;
       this.stepLength = stepSize;
       localStorage.setItem('step_size', stepSize);
 
