@@ -345,7 +345,10 @@ button {
 }
 
 .gender-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin: 20px 0;
-  text-align: left;
 }
 </style>
