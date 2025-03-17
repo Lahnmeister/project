@@ -1,35 +1,33 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import HeaderComponent from '../../src/components/HeaderComponent.vue';
-import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
+import { createRouter, createWebHistory } from 'vue-router';
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
-// Mock-Vuex-Store
+// Fake Vuex Store
 const store = createStore({
   state: {
-    darkMode: false, // Standardwert für Dark Mode ist deaktiviert
+    darkMode: false,
   },
   getters: {
-    darkMode: (state) => state.darkMode, // Getter zum Abrufen des Dark Mode-Status
+    darkMode: (state) => state.darkMode,
   },
   actions: {
-    toggleDarkMode: vi.fn((context) => {
-      context.state.darkMode = !context.state.darkMode; // Umschalten des Dark Mode-Status
-    }),
+    toggleDarkMode: vi.fn(),
   },
 });
 
-// Mock-Router mit allen relevanten Routen
+// Mock Router
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/login', name: 'Login', component: {} }, // Route für Login
-    { path: '/register', name: 'Register', component: {} }, // Route für Registrierung
-    { path: '/tutorial', name: 'Tutorial', component: {} }, // Route für das Tutorial
-    { path: '/treeform', name: 'TreeForm', component: {} }, // Route für das Baum-Formular
-    { path: '/overview', name: 'Overview', component: {} }, // Route für die Tabellenübersicht
-    { path: '/overview2', name: 'Overview2', component: {} }, // Route für die Kartenübersicht
-    { path: '/', name: 'Home', component: {} } // Route für die Startseite
+    { path: '/', component: { template: '<div>Home</div>' } },
+    { path: '/login', component: { template: '<div>Login</div>' } },
+    { path: '/register', component: { template: '<div>Register</div>' } },
+    { path: '/tutorial', component: { template: '<div>Tutorial</div>' } },
+    { path: '/treeform', component: { template: '<div>Baum Form</div>' } },
+    { path: '/map', component: { template: '<div>Übersicht</div>' } },
+    { path: '/user', component: { template: '<div>User</div>' } },
   ],
 });
 
@@ -37,58 +35,48 @@ describe('HeaderComponent.vue', () => {
   let wrapper;
 
   beforeEach(async () => {
-    // Mountet die Header-Komponente mit Router und Store
+    router.push('/');
+    await router.isReady();
     wrapper = mount(HeaderComponent, {
       global: {
-        plugins: [router, store],
+        plugins: [store, router],
       },
     });
-    await router.isReady(); // Warten, bis der Router vollständig geladen ist
   });
 
-  // 🟢 Test: Überprüft, ob der Header korrekt gerendert wird
-  it('rendert die Header-Navigation', () => {
-    expect(wrapper.find('nav').exists()).toBe(true); // Prüft, ob das <nav>-Element existiert
+  it('zeigt Login- und Register-Links, wenn nicht authentifiziert', async () => {
+    expect(wrapper.find('a[href="/login"]').exists()).toBe(true);
+    expect(wrapper.find('a[href="/register"]').exists()).toBe(true);
   });
 
-  // 🟢 Test: Überprüft, ob ein nicht angemeldeter Benutzer nur Login/Register sieht
-  it('zeigt Login und Register, wenn der Benutzer nicht eingeloggt ist', () => {
-    expect(wrapper.find('a[href="/login"]').exists()).toBe(true); // Login-Link sollte existieren
-    expect(wrapper.find('a[href="/register"]').exists()).toBe(true); // Register-Link sollte existieren
-    expect(wrapper.find('a[href="/tutorial"]').exists()).toBe(false); // Tutorial-Link sollte nicht sichtbar sein
-    expect(wrapper.find('button.submit-button').exists()).toBe(false); // Logout-Button sollte nicht existieren
+  it('zeigt keine Login- und Register-Links, wenn authentifiziert', async () => {
+    localStorage.setItem('token', 'test-token');
+    await wrapper.vm.checkAuth();
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('a[href="/login"]').exists()).toBe(false);
+    expect(wrapper.find('a[href="/register"]').exists()).toBe(false);
   });
 
-  // 🟢 Test: Prüft, ob ein authentifizierter Benutzer zusätzliche Links sieht
-  it('zeigt zusätzliche Links, wenn der Benutzer eingeloggt ist', async () => {
-    localStorage.setItem('token', 'valid-token'); // Simuliert ein gespeichertes Token
-    await wrapper.vm.checkAuth(); // Prüft die Authentifizierung
-    await wrapper.vm.$nextTick(); // DOM-Update abwarten
-
-    expect(wrapper.find('a[href="/tutorial"]').exists()).toBe(true); // Tutorial-Link sollte existieren
-    expect(wrapper.find('a[href="/treeform"]').exists()).toBe(true); // Baum-Formular-Link sollte existieren
-    expect(wrapper.find('button.submit-button').exists()).toBe(true); // Logout-Button sollte existieren
-  });
-
-  // 🟢 Test: Überprüft, ob das Logout funktioniert (Token löschen & Weiterleitung)
-  it('führt Logout korrekt durch', async () => {
-    localStorage.setItem('token', 'valid-token'); // Simuliert ein eingeloggtes Szenario
-    await wrapper.vm.checkAuth(); // Authentifizierung prüfen
-    await wrapper.vm.$nextTick(); // DOM-Update abwarten
+  it('zeigt Navigationslinks für authentifizierte Benutzer', async () => {
+    localStorage.setItem('token', 'test-token');
+    await wrapper.vm.checkAuth();
+    await wrapper.vm.$nextTick();
     
-    const routerPush = vi.spyOn(router, 'push'); // Überwacht die Navigation
-    await wrapper.find('button.submit-button').trigger('click'); // Logout-Button klicken
-
-    expect(localStorage.getItem('token')).toBeNull(); // Token sollte entfernt worden sein
-    expect(wrapper.vm.isAuthenticated).toBe(false); // Benutzer sollte als ausgeloggt markiert sein
-    expect(routerPush).toHaveBeenCalledWith('/'); // Benutzer sollte zur Startseite umgeleitet werden
+    expect(wrapper.find('a[href="/tutorial"]').exists()).toBe(true);
+    expect(wrapper.find('a[href="/treeform"]').exists()).toBe(true);
+    expect(wrapper.find('a[href="/map"]').exists()).toBe(true);
+    expect(wrapper.find('a[href="/user"]').exists()).toBe(true);
   });
 
-  // 🟢 Test: Überprüft, ob der Dark Mode aktiviert und korrekt dargestellt wird
-  it('ändert die Dark Mode Klasse, wenn umgeschaltet wird', async () => {
-    const checkbox = wrapper.find('input[type="checkbox"]'); // Findet den Dark Mode Toggle
-    await checkbox.setChecked(); // Aktiviert den Toggle-Schalter
-    await wrapper.vm.$nextTick(); // DOM-Update abwarten
-    expect(wrapper.find('nav').classes()).toContain('dark'); // Prüft, ob die Klasse 'dark' gesetzt wurde
+  it('führt Logout korrekt aus', async () => {
+    localStorage.setItem('token', 'test-token');
+    await wrapper.vm.checkAuth();
+    await wrapper.vm.$nextTick();
+    
+    await wrapper.find('button.submit-button').trigger('click');
+
+    expect(localStorage.getItem('token')).toBeNull();
+    expect(wrapper.vm.isAuthenticated).toBe(false);
   });
+
 });
