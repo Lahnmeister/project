@@ -71,7 +71,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .tutorial-overlay {
   position: fixed;
   top: 0;

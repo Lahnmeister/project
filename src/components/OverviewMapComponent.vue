@@ -134,11 +134,22 @@ export default {
       try {
         if (!lat || !lon || isNaN(lat) || isNaN(lon)) return "";
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+          {
+            headers: {
+              "User-Agent": "BaumMessung/1.0 (test@domain.com)"
+            }
+          }
         );
         const result = await response.json();
         if (result.address) {
-          return result.address.city || result.address.town || result.address.village || "";
+          // Zusätzlich County und State abfragen, falls keine Stadt vorhanden ist
+          return result.address.city ||
+            result.address.town ||
+            result.address.village ||
+            result.address.county ||
+            result.address.state ||
+            "";
         }
         return "";
       } catch (error) {

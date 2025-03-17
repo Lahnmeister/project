@@ -77,5 +77,6 @@ export default {
 #content {
   flex-grow: 1;
   overflow-y: auto;
+  background-color: #f0fff0;
 }
 </style>

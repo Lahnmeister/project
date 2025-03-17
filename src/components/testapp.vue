@@ -7,7 +7,8 @@
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="steps">Anzahl der Schritte</label>
-          <input type="number" id="steps" v-model.number="steps" @input="onInputChange" required min="0" step="1" placeholder="z. B. 3" />
+          <input type="number" id="steps" v-model.number="steps" @input="onInputChange" required min="0" step="1"
+            placeholder="z. B. 3" />
         </div>
       </form>
 

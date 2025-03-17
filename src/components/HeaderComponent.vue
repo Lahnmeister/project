@@ -1,23 +1,34 @@
 <template>
   <nav :class="['header', darkMode ? 'dark' : 'light']">
     <ul>
-      <li v-if="!isAuthenticated"><router-link to="/login">Login</router-link></li>
-      <li v-if="!isAuthenticated"><router-link to="/register">Register</router-link></li>
-      <li><router-link to="/">Startseite</router-link></li>
-      <li v-if="isAuthenticated"><router-link to="/tutorial">Tutorial</router-link></li>
-      
-      <li v-if="isAuthenticated"><router-link to="/treeform">Baum Form</router-link></li>
-      <li v-if="isAuthenticated"><router-link to="/map">Übersicht</router-link></li>
-      <li v-if="isAuthenticated"><router-link to="/user">User</router-link></li>
-      <button v-if="isAuthenticated" class="submit-button" @click="logout">Ausloggen</button>
-      
+      <li v-if="!isAuthenticated">
+        <router-link class="nav-button" to="/login">Login</router-link>
+      </li>
+      <li v-if="!isAuthenticated">
+        <router-link class="nav-button" to="/register">Register</router-link>
+      </li>
+      <li v-if="!isAuthenticated">
+        <router-link class="nav-button" to="/">Startseite</router-link>
+      </li>
+      <li>
+        <router-link class="nav-button" to="/tutorial">Distanz- bzw. <br /> Höhenermittlung</router-link>
+      </li>
+      <li v-if="isAuthenticated">
+        <router-link class="nav-button" to="/treeform">Baum Form</router-link>
+      </li>
+      <li v-if="isAuthenticated">
+        <router-link class="nav-button" to="/map">Übersicht</router-link>
+      </li>
+      <li v-if="isAuthenticated">
+        <router-link class="nav-button" to="/user">User</router-link>
+      </li>
+      <li v-if="isAuthenticated">
+        <button class="logout-button" @click="logout">Ausloggen</button>
+      </li>
     </ul>
-    <!--<label class="switch">
-      <input type="checkbox" v-model="darkMode" @change="toggleDarkMode" />
-      <span class="slider"></span>
-    </label>-->
   </nav>
 </template>
+
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
@@ -65,5 +76,68 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import './style.css';
+.header {
+  display: flex;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px;
+}
+
+/* Flexibles Menü */
+.header ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header li {
+  margin-right: 0px;
+  white-space: nowrap;
+}
+
+/* Standardstil für Navigation-Buttons */
+.nav-button {
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Interaktiver Effekt: Beim Anklicken grün (#45a049) */
+.nav-button:active {
+  background-color: #45a049;
+  color: #fff;
+}
+
+/* Logout-Button: Immer grün */
+.logout-button {
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #45a049;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Optionaler Hover-Effekt für Logout-Button */
+.logout-button:hover {
+  background-color: #3e8e41;
+}
+
+/* Optional: Styling für dunklen und hellen Modus */
+.header.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.header.light {
+  background-color: #fff;
+  color: #000;
+}
 </style>

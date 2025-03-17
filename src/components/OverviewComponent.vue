@@ -36,7 +36,18 @@
                 Kein Bild vorhanden
               </template>
             </td>
-            <td>{{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}</td>
+            <td>
+              {{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}
+              <p>
+                <button class="social-button" @click="shareOnTwitter(tree.imageUrl)">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" alt="Twitter" />
+                </button>
+                &nbsp;
+                <button class="social-button" @click="shareToInstagram(tree.imageUrl)">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Twitter" />
+                </button>
+              </p>
+            </td>
             <td>{{ tree.co2_stored.toFixed(2) }} kg</td>
             <!-- Method Getlocation called -->
             <td>{{ getLocation(tree) }}</td>
@@ -136,7 +147,6 @@ export default {
     },
     averageHeight() {
       if (!this.filteredTrees.length) return 0;
-      // Calculate the average
       const totalHeight = this.filteredTrees.reduce((sum, tree) => {
         return sum + Number(tree.height);
       }, 0);
@@ -220,13 +230,13 @@ export default {
         console.log("Serverantwort:", data);
         let allTrees = data.trees || [];
         const currentUserId = this.getCurrentUserId(token);
-        // Filters the trees of the registered user
+        // Filtert die Bäume des registrierten Nutzers
         this.trees = allTrees.filter(tree =>
           tree.initial_creator_id === currentUserId &&
           tree.latitude && tree.longitude &&
           !isNaN(parseFloat(tree.latitude)) && !isNaN(parseFloat(tree.longitude))
         );
-        //Set measurements, reverse geocoding and image
+        // Setzt Maße, Reverse Geocoding und Bild
         await Promise.all(
           this.trees.map(async (tree) => {
             const measurement = (tree.measurements && tree.measurements.length > 0)
@@ -257,11 +267,22 @@ export default {
       try {
         if (!lat || !lon || isNaN(lat) || isNaN(lon)) return "";
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+          {
+            headers: {
+              "User-Agent": "BaumMessung/1.0 (test@domain.com)"
+            }
+          }
         );
         const result = await response.json();
         if (result.address) {
-          return result.address.city || result.address.town || result.address.village || "";
+          // Zusätzlich County und State abfragen, falls keine Stadt vorhanden ist
+          return result.address.city ||
+            result.address.town ||
+            result.address.village ||
+            result.address.county ||
+            result.address.state ||
+            "";
         }
         return "";
       } catch (error) {
@@ -270,7 +291,6 @@ export default {
       }
     },
     getImageUrl(tree) {
-      // URL for the pictures
       const baseUrl = "https://treescope.cs.hs-fulda.de/static/uploads";
       if (tree.files && tree.files.length > 0 && tree.files[0].photo_path) {
         let photoPath = tree.files[0].photo_path.trim();
@@ -292,13 +312,28 @@ export default {
       return `${day}.${month}.${year}`;
     },
     addMarkers() {
+      // Hier Marker-Logik einfügen
     },
-    //Method for the location edition
+    // Methode für die Standortanzeige
     getLocation(tree) {
       if (!tree.locationName || tree.locationName.trim() === "" || tree.locationName.trim() === "0") {
         return "Keine Angabe";
       }
       return tree.locationName;
+    },
+    shareOnTwitter(treehash) {
+      const text = encodeURIComponent("Schau dir diesen coolen Baum an!");
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${treehash}`, "_blank");
+    },
+    shareToInstagram(imageUrl) {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) {
+        alert("Diese Funktion funktioniert nur auf Android-Geräten mit installierter Instagram-App.");
+        return;
+      }
+      const encodedImageUrl = encodeURIComponent(imageUrl);
+      const url = `intent://story?source_url=${encodedImageUrl}#Intent;package=com.instagram.android;scheme=instagram;end`;
+      window.location.href = url;
     }
   },
   created() {
@@ -308,27 +343,21 @@ export default {
 </script>
 
 <script setup>
-
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-// Variable, um zu prüfen, ob der Benutzer authentifiziert ist
+// Überprüft die Authentifizierung
 const router = useRouter();
-
-// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
 const checkAuth = () => {
   const token = localStorage.getItem("token");
   if (!token) {
-    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+    router.push("/");
     return;
   }
 };
-
-// Beim Laden der Seite die Authentifizierung prüfen
 onMounted(() => {
   checkAuth();
 });
-
 </script>
 
 <style scoped>
@@ -405,5 +434,23 @@ th {
   width: 100px;
   height: 100px;
   object-fit: cover;
+}
+
+.social-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.social-button img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.social-button img:hover {
+  transform: scale(1.1);
 }
 </style>

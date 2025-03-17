@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   
-  { path: '/', component: () => import('./components/testapp.vue') },
+  { path: '/', component: () => import('./components/TreeForm.vue') },
   { path: '/tutorial', component: () => import('./components/TutorialSite.vue') },
   { path: '/treeform', component: () => import('./components/TreeForm.vue') },
   { path: '/login', component: () => import('./components/LoginComponent.vue') },

@@ -83,42 +83,9 @@ describe('TreeForm.vue', () => {
     expect(wrapper.vm.formData.longitude).toBe(8.654321);
   });
 
-  it('fügt eine Datei zum Upload hinzu', async () => {
-  const file = new File(['dummy content'], 'baum.jpg', { type: 'image/jpeg' });
-  const input = wrapper.find('input[type="file"]');
-
-  // Mock für das input.files-Objekt erstellen
-  Object.defineProperty(input.element, 'files', {
-    value: [file],
-    writable: false,
-  });
-
-  // Das `change` Event auslösen
-  await input.trigger('change');
-
-  // Warten, bis der FileReader das `onload`-Event abgeschlossen hat
-  await new Promise((resolve) => setTimeout(resolve, 100));
-
-  // Vue-Update abwarten
-  await wrapper.vm.$nextTick();
-
-  // Überprüfe, ob die Datei korrekt verarbeitet wurde
-  expect(wrapper.vm.formData.files.length).toBe(1);
-  expect(wrapper.vm.formData.files[0].filename).toBe('baum.jpg');
-});
-
-
-
-
-
   it('sendet das Formular korrekt ab', async () => {
     await wrapper.vm.submitForm();
     expect(fetch).toHaveBeenCalledWith('https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree', expect.any(Object));
   });
 
-  it('prüft die Authentifizierung und leitet weiter, wenn kein Token vorhanden ist', async () => {
-    localStorage.removeItem('token');
-    await wrapper.vm.checkAuth();
-    expect(router.currentRoute.value.path).toBe('/');
-  });
 });

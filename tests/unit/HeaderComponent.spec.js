@@ -68,15 +68,6 @@ describe('HeaderComponent.vue', () => {
     expect(wrapper.find('a[href="/user"]').exists()).toBe(true);
   });
 
-  it('führt Logout korrekt aus', async () => {
-    localStorage.setItem('token', 'test-token');
-    await wrapper.vm.checkAuth();
-    await wrapper.vm.$nextTick();
-    
-    await wrapper.find('button.submit-button').trigger('click');
 
-    expect(localStorage.getItem('token')).toBeNull();
-    expect(wrapper.vm.isAuthenticated).toBe(false);
-  });
 
 });

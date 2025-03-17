@@ -12,6 +12,16 @@
         <p><strong>Höhe:</strong> {{ tree.height }} m</p>
         <p><strong>Datum:</strong> {{ formatDate(tree.created_at) }}</p>
         <p><strong>CO₂ Gespeichert:</strong> {{ tree.co2_stored.toFixed(2) }} kg</p>
+        <p>
+          <button class="social-button" @click="shareOnTwitter(tree.imageUrl)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" alt="Twitter" />
+          </button>
+          &nbsp;
+          <button class="social-button" @click="shareToInstagram(tree.imageUrl)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Twitter" />
+          </button>
+        </p>
+
       </div>
     </div>
   </div>
@@ -110,11 +120,22 @@ export default {
       try {
         if (!lat || !lon || isNaN(lat) || isNaN(lon)) return "";
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+          {
+            headers: {
+              "User-Agent": "BaumMessung/1.0 (test@domain.com)"
+            }
+          }
         );
         const result = await response.json();
         if (result.address) {
-          return result.address.city || result.address.town || result.address.village || "";
+          // Zusätzlich County und State abfragen, falls keine Stadt vorhanden ist
+          return result.address.city ||
+            result.address.town ||
+            result.address.village ||
+            result.address.county ||
+            result.address.state ||
+            "";
         }
         return "";
       } catch (error) {
@@ -160,11 +181,27 @@ export default {
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
+    },
+    shareOnTwitter(treehash) {
+      const text = encodeURIComponent("Schau dir diesen coolen Baum an!");
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${treehash}`, "_blank");
+    },
+    shareToInstagram(imageUrl) {
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (!isAndroid) {
+        alert("Diese Funktion funktioniert nur auf Android-Geräten mit installierter Instagram-App.");
+        return;
+      }
+      const encodedImageUrl = encodeURIComponent(imageUrl);
+      const url = `intent://story?source_url=${encodedImageUrl}#Intent;package=com.instagram.android;scheme=instagram;end`;
+      window.location.href = url;
     }
+
   },
   created() {
     this.fetchTrees();
   }
+
 };
 </script>
 
@@ -245,6 +282,24 @@ onMounted(() => {
 .card p {
   font-size: 1.2em;
   margin: 5px 0;
+}
+
+.social-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.social-button img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.social-button img:hover {
+  transform: scale(1.1);
 }
 
 /* Adapted styling for desktop (from 768px) */

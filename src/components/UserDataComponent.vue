@@ -28,25 +28,13 @@
     <form v-else @submit.prevent="updateUser">
       <div class="form-group">
         <label for="username">Benutzername <span class="required">*</span></label>
-        <input
-          id="username"
-          v-model="user.username"
-          type="text"
-          required
-          placeholder="Benutzername"
-        />
+        <input id="username" v-model="user.username" type="text" required placeholder="Benutzername" />
       </div>
 
       <div class="form-group">
         <label for="email">E-Mail</label>
         <div class="edit-container">
-          <input
-            id="email"
-            v-model="user.email"
-            type="email"
-            placeholder="E-Mail-Adresse"
-            disabled
-          />
+          <input id="email" v-model="user.email" type="email" placeholder="E-Mail-Adresse" disabled />
           <button type="button" class="edit-button" @click="openChangeEmailModal">
             E-Mail bearbeiten
           </button>
@@ -55,55 +43,29 @@
 
       <div class="form-group">
         <label for="firstName">Vorname</label>
-        <input
-          id="firstName"
-          v-model="user.firstName"
-          type="text"
-          placeholder="Optional"
-        />
+        <input id="firstName" v-model="user.firstName" type="text" placeholder="Optional" />
       </div>
 
       <div class="form-group">
         <label for="lastName">Nachname</label>
-        <input
-          id="lastName"
-          v-model="user.lastName"
-          type="text"
-          placeholder="Optional"
-        />
+        <input id="lastName" v-model="user.lastName" type="text" placeholder="Optional" />
       </div>
 
       <!-- Neues Feld: Schrittlänge (in cm) -->
       <div class="form-group">
         <label for="step_length">Schrittlänge (in cm) <span class="required">*</span></label>
-        <input
-          id="step_length"
-          v-model.number="user.step_length"
-          type="number"
-          required
-          placeholder="Schrittlänge in cm"
-        />
+        <input id="step_length" v-model.number="user.step_length" type="number" required
+          placeholder="Schrittlänge in cm" />
       </div>
 
       <div class="form-group" style="position: relative;">
         <label for="address">Adresse <span class="required">*</span></label>
-        <input
-          id="address"
-          v-model="addressQuery"
-          type="text"
-          placeholder="Adresse eingeben"
-          @input="onAddressInput"
-          @blur="hideSuggestions"
-          autocomplete="off"
-          required
-        />
+        <input id="address" v-model="addressQuery" type="text" placeholder="Adresse eingeben" @input="onAddressInput"
+          @blur="hideSuggestions" autocomplete="off" required />
         <!-- Autocomplete Suggestions -->
         <ul v-if="addressSuggestions.length > 0" class="suggestions-list">
-          <li
-            v-for="(suggestion, index) in addressSuggestions"
-            :key="index"
-            @mousedown.prevent="selectAddress(suggestion)"
-          >
+          <li v-for="(suggestion, index) in addressSuggestions" :key="index"
+            @mousedown.prevent="selectAddress(suggestion)">
             {{ suggestion.display }}
           </li>
         </ul>
@@ -114,40 +76,18 @@
 
       <div class="form-group">
         <label for="latitude">Breitengrad (Latitude)</label>
-        <input
-          id="latitude"
-          v-model="user.latitude"
-          type="text"
-          placeholder="Latitude"
-          readonly
-          required
-          disabled
-        />
+        <input id="latitude" v-model="user.latitude" type="text" placeholder="Latitude" readonly required disabled />
       </div>
 
       <div class="form-group">
         <label for="longitude">Längengrad (Longitude)</label>
-        <input
-          id="longitude"
-          v-model="user.longitude"
-          type="text"
-          placeholder="Longitude"
-          readonly
-          required
-          disabled
-        />
+        <input id="longitude" v-model="user.longitude" type="text" placeholder="Longitude" readonly required disabled />
       </div>
 
       <div class="form-group">
         <label>Passwort</label>
         <div class="edit-container">
-          <input 
-            type="password"
-            v-model="user.password"
-            id="password"
-            placeholder="********"
-            disabled
-          />
+          <input type="password" v-model="user.password" id="password" placeholder="********" disabled />
           <button type="button" class="edit-button" @click="openChangePasswordModal">
             Passwort ändern
           </button>
@@ -170,22 +110,12 @@
         <form @submit.prevent="changePassword">
           <div class="form-group">
             <label for="oldPassword">Altes Passwort</label>
-            <input
-              id="oldPassword"
-              v-model="passwordData.oldPassword"
-              type="password"
-              required
-            />
+            <input id="oldPassword" v-model="passwordData.oldPassword" type="password" required />
           </div>
 
           <div class="form-group">
             <label for="newPassword">Neues Passwort</label>
-            <input
-              id="newPassword"
-              v-model="passwordData.newPassword"
-              type="password"
-              required
-            />
+            <input id="newPassword" v-model="passwordData.newPassword" type="password" required />
           </div>
 
           <div v-if="passwordData.newPassword" class="password-requirements">
@@ -198,12 +128,7 @@
 
           <div class="form-group">
             <label for="confirmNewPassword">Neues Passwort bestätigen</label>
-            <input
-              id="confirmNewPassword"
-              v-model="passwordData.confirmNewPassword"
-              type="password"
-              required
-            />
+            <input id="confirmNewPassword" v-model="passwordData.confirmNewPassword" type="password" required />
           </div>
 
           <div v-if="passwordChangeError" class="error-message">
@@ -226,45 +151,24 @@
         <form @submit.prevent="changeEmail">
           <div class="form-group">
             <label for="currentEmail">Aktuelle E-Mail</label>
-            <input
-              id="currentEmail"
-              type="email"
-              :value="user.email"
-              disabled
-            />
+            <input id="currentEmail" type="email" :value="user.email" disabled />
           </div>
 
           <div class="form-group">
             <label for="newEmail">Neue E-Mail</label>
-            <input
-              id="newEmail"
-              v-model="emailData.newEmail"
-              type="email"
-              required
-              placeholder="Neue E-Mail-Adresse"
-            />
+            <input id="newEmail" v-model="emailData.newEmail" type="email" required placeholder="Neue E-Mail-Adresse" />
           </div>
 
           <div class="form-group">
             <label for="confirmNewEmail">Neue E-Mail bestätigen</label>
-            <input
-              id="confirmNewEmail"
-              v-model="emailData.confirmNewEmail"
-              type="email"
-              required
-              placeholder="Neue E-Mail-Adresse bestätigen"
-            />
+            <input id="confirmNewEmail" v-model="emailData.confirmNewEmail" type="email" required
+              placeholder="Neue E-Mail-Adresse bestätigen" />
           </div>
 
           <div class="form-group">
             <label for="currentPassword">Aktuelles Passwort</label>
-            <input
-              id="currentPassword"
-              v-model="emailData.currentPassword"
-              type="password"
-              required
-              placeholder="Aktuelles Passwort"
-            />
+            <input id="currentPassword" v-model="emailData.currentPassword" type="password" required
+              placeholder="Aktuelles Passwort" />
           </div>
 
           <div v-if="emailChangeError" class="error-message">
@@ -304,7 +208,7 @@ export default {
         email: "",
         firstName: "",
         lastName: "",
-        step_length: 0, 
+        step_length: 0,
         address: "",
         latitude: "",
         longitude: "",
@@ -430,7 +334,7 @@ export default {
           this.user.email = data.email || "";
           this.user.firstName = data.first_name || "";
           this.user.lastName = data.last_name || "";
-          this.user.step_length = data.step_length || 0; 
+          this.user.step_length = data.step_length || 0;
           this.user.latitude = this.formatCoordinate(data.latitude) || "";
           this.user.longitude = this.formatCoordinate(data.longitude) || "";
 
@@ -446,98 +350,98 @@ export default {
     },
 
     async updateUser() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("Kein Authentifizierungstoken gefunden. Bitte logge dich erneut ein.");
-    this.$router.push("/login");
-    return;
-  }
-
-  this.formError = "";
-  this.addressError = "";
-
-  if (!this.isAddressValid) {
-    this.formError = "Bitte wähle eine gültige Adresse aus.";
-    return;
-  }
-  if (!this.validateCoordinates()) {
-    return;
-  }
-  if (!this.user.username.trim()) {
-    this.formError = "Bitte gib einen gültigen Benutzernamen ein.";
-    return;
-  }
-  if (!this.user.step_length || this.user.step_length < 60 || this.user.step_length > 90) {
-    this.formError = "Bitte gib eine Schrittlänge zwischen 60 und 90 cm ein.";
-    return;
-  }
-
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const userId = payload.user_id || payload.id;
-    if (!userId) {
-      alert("Benutzer-ID konnte nicht ermittelt werden.");
-      this.$router.push("/login");
-      return;
-    }
-
-    const updateParams = {
-      username: this.user.username,
-      latitude: this.formatCoordinate(this.user.latitude),
-      longitude: this.formatCoordinate(this.user.longitude),
-      step_length: this.user.step_length
-    };
-    if (this.user.firstName.trim() !== "") {
-      updateParams.first_name = this.user.firstName;
-    }
-    if (this.user.lastName.trim() !== "") {
-      updateParams.last_name = this.user.lastName;
-    }
-
-    const response = await fetch(`https://treescope.cs.hs-fulda.de/api/v1/users/${userId}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(updateParams)
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      alert("Daten erfolgreich aktualisiert!");
-      this.isEditing = false;
-
-      this.user.username = data.username || "";
-      this.user.email = data.email || "";
-      this.user.firstName = data.first_name || "";
-      this.user.lastName = data.last_name || "";
-      this.user.step_length = data.step_length || 0;
-      this.user.latitude = this.formatCoordinate(data.latitude) || "";
-      this.user.longitude = this.formatCoordinate(data.longitude) || "";
-
-      // Schrittlänge im Local Storage speichern
-      localStorage.setItem("step_size", this.user.step_length);
-
-      if (this.user.latitude && this.user.longitude) {
-        await this.reverseGeocode(this.user.latitude, this.user.longitude);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Kein Authentifizierungstoken gefunden. Bitte logge dich erneut ein.");
+        this.$router.push("/login");
+        return;
       }
-    } else {
-      const errData = await response.json() || {};
-      const errMsg = errData.message || "";
 
-      if (errMsg.includes("first_name")) {
-        this.formError = "Der Vorname darf keine Zahlen oder Sonderzeichen enthalten.";
-      } else if (errMsg.includes("last_name")) {
-        this.formError = "Der Nachname darf keine Zahlen oder Sonderzeichen enthalten.";
-      } else {
-        this.formError = "Beim Speichern ist ein Fehler aufgetreten. Bitte prüfe deine Eingaben.";
+      this.formError = "";
+      this.addressError = "";
+
+      if (!this.isAddressValid) {
+        this.formError = "Bitte wähle eine gültige Adresse aus.";
+        return;
       }
-    }
-  } catch (error) {
-    this.formError = "Netzwerkfehler oder Server nicht erreichbar.";
-  }
-},
+      if (!this.validateCoordinates()) {
+        return;
+      }
+      if (!this.user.username.trim()) {
+        this.formError = "Bitte gib einen gültigen Benutzernamen ein.";
+        return;
+      }
+      if (!this.user.step_length || this.user.step_length < 60 || this.user.step_length > 90) {
+        this.formError = "Bitte gib eine Schrittlänge zwischen 60 und 90 cm ein.";
+        return;
+      }
+
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const userId = payload.user_id || payload.id;
+        if (!userId) {
+          alert("Benutzer-ID konnte nicht ermittelt werden.");
+          this.$router.push("/login");
+          return;
+        }
+
+        const updateParams = {
+          username: this.user.username,
+          latitude: this.formatCoordinate(this.user.latitude),
+          longitude: this.formatCoordinate(this.user.longitude),
+          step_length: this.user.step_length
+        };
+        if (this.user.firstName.trim() !== "") {
+          updateParams.first_name = this.user.firstName;
+        }
+        if (this.user.lastName.trim() !== "") {
+          updateParams.last_name = this.user.lastName;
+        }
+
+        const response = await fetch(`https://treescope.cs.hs-fulda.de/api/v1/users/${userId}`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(updateParams)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert("Daten erfolgreich aktualisiert!");
+          this.isEditing = false;
+
+          this.user.username = data.username || "";
+          this.user.email = data.email || "";
+          this.user.firstName = data.first_name || "";
+          this.user.lastName = data.last_name || "";
+          this.user.step_length = data.step_length || 0;
+          this.user.latitude = this.formatCoordinate(data.latitude) || "";
+          this.user.longitude = this.formatCoordinate(data.longitude) || "";
+
+          // Schrittlänge im Local Storage speichern
+          localStorage.setItem("step_size", this.user.step_length);
+
+          if (this.user.latitude && this.user.longitude) {
+            await this.reverseGeocode(this.user.latitude, this.user.longitude);
+          }
+        } else {
+          const errData = await response.json() || {};
+          const errMsg = errData.message || "";
+
+          if (errMsg.includes("first_name")) {
+            this.formError = "Der Vorname darf keine Zahlen oder Sonderzeichen enthalten.";
+          } else if (errMsg.includes("last_name")) {
+            this.formError = "Der Nachname darf keine Zahlen oder Sonderzeichen enthalten.";
+          } else {
+            this.formError = "Beim Speichern ist ein Fehler aufgetreten. Bitte prüfe deine Eingaben.";
+          }
+        }
+      } catch (error) {
+        this.formError = "Netzwerkfehler oder Server nicht erreichbar.";
+      }
+    },
 
     async changeEmail() {
       const token = localStorage.getItem("token");
@@ -820,14 +724,15 @@ export default {
 </script>
 
 <style scoped>
-
 .user-profile {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 300px;
+  margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
+  place-content: center;
+  display: grid;
 }
 
 h1 {
@@ -838,16 +743,17 @@ h1 {
 /* Edit user data */
 .userdata-edit-button {
   display: inline-block;
-  margin: 0.5rem 0.5rem 1rem 0; 
+  margin: 0.5rem 0.5rem 1rem 0;
   padding: 0.5rem 1rem;
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
 .userdata-edit-button:hover {
-  background-color: #0056b3;
+  background-color: #28a745;
 }
 
 /* Delete account */
@@ -860,6 +766,7 @@ h1 {
   border-radius: 4px;
   cursor: pointer;
 }
+
 .delete-button:hover {
   background-color: #a52a2a;
 }
@@ -872,9 +779,10 @@ h1 {
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;  
+  cursor: pointer;
   white-space: nowrap;
 }
+
 .edit-button:hover {
   background-color: #0056b3;
 }
@@ -889,6 +797,7 @@ h1 {
   cursor: pointer;
   margin-right: 0.5rem;
 }
+
 .save-button:disabled {
   background-color: #94d3a2;
   cursor: not-allowed;
@@ -908,6 +817,7 @@ h1 {
 .form-group {
   margin-bottom: 1rem;
 }
+
 .form-group input[disabled] {
   background-color: #e9ecef;
   cursor: not-allowed;
@@ -918,6 +828,7 @@ label {
   display: block;
   margin-bottom: 0.5rem;
 }
+
 input {
   width: 100%;
   padding: 0.5rem;
@@ -935,6 +846,7 @@ input {
   color: red;
   margin-bottom: 1rem;
 }
+
 .success-message {
   color: green;
   margin-bottom: 1rem;
@@ -954,10 +866,12 @@ input {
   width: calc(100% - 1rem);
   z-index: 1001;
 }
+
 .suggestions-list li {
   padding: 0.5rem;
   cursor: pointer;
 }
+
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
@@ -969,12 +883,13 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
+
 .modal-content {
   background-color: #fff;
   width: 90%;
@@ -983,6 +898,7 @@ input {
   border-radius: 8px;
   position: relative;
 }
+
 .modal-content h2 {
   margin-top: 0;
 }
@@ -992,6 +908,7 @@ input {
   margin: 0.25rem 0;
   color: red;
 }
+
 .password-requirements p.valid {
   color: green;
 }
@@ -1002,6 +919,7 @@ input {
   align-items: center;
   gap: 0.5rem;
 }
+
 .edit-container input[disabled] {
   background-color: #e9ecef;
   cursor: not-allowed;
@@ -1014,22 +932,25 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1100;
 }
+
 .popup-content {
   background-color: #fff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
+
 .popup-content p {
   margin-bottom: 1rem;
 }
+
 .popup-content button {
   padding: 0.5rem 1rem;
   background-color: #007bff;
@@ -1038,6 +959,7 @@ input {
   border-radius: 4px;
   cursor: pointer;
 }
+
 .popup-content button:hover {
   background-color: #0056b3;
 }

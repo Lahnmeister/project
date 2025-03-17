@@ -70,6 +70,7 @@
       </table>
       <b>2. Stelle sicher, dass du maximal ± 5 cm Abweichung von deinem erwarteten Durchschnittswert hast</b>
       <br />
+      <br />
       <b>3. Gib an, ob deine Schrittlänge dem erwarteten Wert entspricht:</b>
 
       <div class="step-length-check">
@@ -84,9 +85,14 @@
         <input type="number" v-model.number="userHeight" placeholder="Körpergröße in cm" id="userHeight" />
 
         <div class="gender-selection">
-          <label>Geschlecht:</label>
-          <label><input type="radio" v-model="userGender" value="female"> Weiblich</label>
-          <label><input type="radio" v-model="userGender" value="male"> Männlich</label>
+          <label for="female">
+            <input type="radio" id="female" name="gender" value="female" v-model="userGender">
+            <span class="emoji">♀️</span>
+          </label>
+          <label for="male">
+            <input type="radio" id="male" name="gender" value="male" v-model="userGender">
+            <span class="emoji">♂️</span>
+          </label>
         </div>
 
         <button @click="confirmHeight">Bestätigen</button>
@@ -103,10 +109,13 @@
       <h2>Weitere Informationen zur Baummessung</h2>
       <h3>Tipps zur Messung</h3>
       <ul>
-        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise befindest du dich auf der selben Höhe wie der Baum.</li>
-        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
+        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise
+          befindest du dich auf der selben Höhe wie der Baum.</li>
+        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das
+          andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
         <li>Halte bitte dein Gerät ungefähr auf der Brusthöhe, wenn du das Bild machen möchtest.</li>
-        <li>Achte darauf, dass einige Bäume mehrere Kronen haben können, die möglicherweise höher sind als die anderen.</li>
+        <li>Achte darauf, dass einige Bäume mehrere Kronen haben können, die möglicherweise höher sind als die anderen.
+        </li>
       </ul>
       <button @click="closeTutorial">Schließen</button>
     </div>
@@ -135,7 +144,7 @@ export default {
       stepLengthConfirmed: null,
       userHeight: null,
       manualStepLength: null,
-      userGender: null, 
+      userGender: null,
 
       stepLength: null,
       stepLengths: [
@@ -291,7 +300,7 @@ export default {
         return;
       }
       this.stepLength = this.manualStepLength;
-      
+
       localStorage.setItem('step_size', this.manualStepLength);
 
       this.showMeasurementTutorial = false;
@@ -309,7 +318,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .tutorial-overlay {
   position: fixed;
   top: 0;
@@ -324,7 +333,8 @@ export default {
 }
 
 .tutorial-content {
-  background-color: white;
+  background-color: #f0fff0;
+  /* Helles Grün */
   padding: 40px;
   border-radius: 12px;
   text-align: center;
@@ -332,6 +342,7 @@ export default {
   max-width: 600px;
   max-height: 90%;
   overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 input {
@@ -345,13 +356,83 @@ input {
 
 button {
   margin: 5px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  border: 1px solid #e0e0e0;
+}
+
+table th {
+  background-color: #388E3C;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+table tr:nth-child(even) {
+  background-color: #f0fff0;
+}
+
+table tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #e8f5e9;
 }
 
 .gender-selection {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 20px;
+}
+
+.emoji {
+  font-size: 2em;
+  /* Setzt die Größe des Elements */
+  cursor: pointer;
+  /* Ändert den Mauszeiger zu einem Hand-Symbol */
+  transition: transform 0.3s ease, color 0.3s ease;
+  /* Sorgt für sanfte Übergänge */
+}
+
+.emoji:hover {
+  transform: scale(1.2);
+  color: #4CAF50;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  /* Fügt einen Schatten hinzu */
+}
+
+input[type="radio"] {
+  display: none;
+  /* Versteckt den Radio-Button */
+}
+
+input[type="radio"]:checked+.emoji {
+  color: #4CAF50;
+  /* Optional: Hebt das ausgewählte Emoji farblich hervor */
+  background-color: #4CAF50;
 }
 </style>
