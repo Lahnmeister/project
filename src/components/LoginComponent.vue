@@ -33,12 +33,15 @@
     </div>
 
     <div class="formbold-input-flex remember-forgot">
-      <label for="remember">
-        <input type="checkbox" id="remember" /> Merken
+      <div class="remember-password">
+        <label for="remember">Merken</label>
+        <input type="checkbox" id="remember"/> 
+      </div>
+      <div>
         <router-link to="/passwordreset">
           <button class="formbold-btn">Passwort vergessen?</button>
         </router-link>
-      </label>
+      </div>
     </div>
 
     <button @click="login" class="formbold-btn">Login</button>
@@ -91,4 +94,12 @@ const login = async () => {
 
 <style scoped>
 @import './style.css';
+.remember-password{
+  display: flex;
+  gap:5px;
+  margin-right: 20px;
+}
+.remember-password input{
+  margin-bottom: 10px;
+}
 </style>
