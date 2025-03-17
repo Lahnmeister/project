@@ -12,10 +12,10 @@
       <button v-if="isAuthenticated" class="submit-button" @click="logout">Ausloggen</button>
       
     </ul>
-    <label class="switch">
+    <!--<label class="switch">
       <input type="checkbox" v-model="darkMode" @change="toggleDarkMode" />
       <span class="slider"></span>
-    </label>
+    </label>-->
   </nav>
 </template>
 
