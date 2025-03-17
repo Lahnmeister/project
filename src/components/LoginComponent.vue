@@ -1,21 +1,34 @@
 <template>
   <div class="form-container">
-
     <h2 class="formbold-form-title">Login</h2>
 
     <div class="formbold-input-flex">
       <div>
-        <label for="email" class="formbold-form-label">E-Mail</label>
-        <input v-model="username" type="text" name="Username" id="email" placeholder="Benutzername eingeben"
-          class="formbold-form-input" required />
+        <label for="username" class="formbold-form-label">Benutzername</label>
+        <input
+          v-model="username"
+          type="text"
+          name="Username"
+          id="email"
+          placeholder="Benutzername eingeben"
+          class="formbold-form-input"
+          required
+        />
       </div>
     </div>
 
     <div class="formbold-input-flex">
       <div>
         <label for="password" class="formbold-form-label">Passwort</label>
-        <input v-model="password" type="password" name="password" id="password" placeholder="Passwort eingeben"
-          class="formbold-form-input" required />
+        <input
+          v-model="password"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Passwort eingeben"
+          class="formbold-form-input"
+          required
+        />
       </div>
     </div>
 
@@ -26,19 +39,15 @@
           <button class="formbold-btn">Passwort vergessen?</button>
         </router-link>
       </label>
-      <!--<a href="#" class="forgot-password">Passwort vergessen?</a>-->
     </div>
-
-
 
     <button @click="login" class="formbold-btn">Login</button>
 
     <div class="register-link">
-      <!--<p>Don't have an account? <router-link to="/register">Register</router-link></p>-->
+      <p>Noch kein Account? <router-link to="/register">Hier registrieren</router-link></p>
     </div>
 
     <p v-if="errorMessage">{{ errorMessage }}</p>
-
   </div>
 </template>
 
@@ -57,8 +66,7 @@ const login = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-      }, // API erwartet JSON-Daten
-
+      },
       body: JSON.stringify({
         username: username.value,
         password: password.value,
@@ -66,10 +74,12 @@ const login = async () => {
     });
 
     const data = await response.json();
+    //console.log(data)
 
     if (response.ok) {
-      localStorage.setItem("token", data.access_token); // Speichert das Token
-      router.push("/"); // Weiterleitung nach erfolgreichem Login
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("step_size", data.user.step_length);
+      router.push("/");
     } else {
       errorMessage.value = data.error || "Login fehlgeschlagen";
     }

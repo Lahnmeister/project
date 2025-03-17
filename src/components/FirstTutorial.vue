@@ -1,19 +1,17 @@
 <template>
   <div v-if="showTutorial" class="tutorial-overlay">
-
-    <div class="tutorial-content" v-if="!showMeasurementTutorial && !showAdditionalPage">
+    <div v-if="!showMeasurementTutorial && !showAdditionalPage" class="tutorial-content">
       <h2 v-if="currentPage <= 4">Citizen Science - Baummessung</h2>
 
       <div v-if="currentPage === 1">
         <h3>Möchten Sie sich jetzt registrieren?</h3>
         <button @click="goToRegistration">Ja</button>
-
         <button @click="skipAndStartMeasurementTutorial">Nein, später</button>
       </div>
 
       <div v-else-if="currentPage === 2">
         <h3>Benutzername</h3>
-        <p>Suchen Sie sich einen Benutzernamen aus (keine Sonderzeichen oder Zahlen erlaubt):</p>
+        <p>Suchen Sie sich einen Benutzernamen aus (max. 15 Zeichen; keine Sonderzeichen oder Zahlen erlaubt):</p>
         <input type="text" v-model="formData.username" placeholder="Benutzername" />
         <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
         <button @click="prevPage">Zurück</button>
@@ -84,6 +82,13 @@
       <div v-if="stepLengthConfirmed === 'yes'" class="height-input">
         <label for="userHeight">Bitte gib deine Körpergröße in cm an:</label>
         <input type="number" v-model.number="userHeight" placeholder="Körpergröße in cm" id="userHeight" />
+
+        <div class="gender-selection">
+          <label>Geschlecht:</label>
+          <label><input type="radio" v-model="userGender" value="female"> Weiblich</label>
+          <label><input type="radio" v-model="userGender" value="male"> Männlich</label>
+        </div>
+
         <button @click="confirmHeight">Bestätigen</button>
       </div>
 
@@ -98,10 +103,8 @@
       <h2>Weitere Informationen zur Baummessung</h2>
       <h3>Tipps zur Messung</h3>
       <ul>
-        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise
-          befindest du dich auf der selben Höhe wie der Baum.</li>
-        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das
-          andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
+        <li>Achte bitte darauf, dass die Höhendifferenz zwischen dir und dem Baum möglichst gering ist. Idealerweise befindest du dich auf der selben Höhe wie der Baum.</li>
+        <li>Mach bitte zwei Bilder. Ein Bild soll die Neigung des Baums dokumentieren, falls diese vorhanden ist. Das andere Bild soll keine Neigung enthalten (90 °). Beachte: Zwei Bilder mit Neigungen sind fehlerhaft.</li>
         <li>Halte bitte dein Gerät ungefähr auf der Brusthöhe, wenn du das Bild machen möchtest.</li>
         <li>Achte darauf, dass einige Bäume mehrere Kronen haben können, die möglicherweise höher sind als die anderen.</li>
       </ul>
@@ -132,6 +135,7 @@ export default {
       stepLengthConfirmed: null,
       userHeight: null,
       manualStepLength: null,
+      userGender: null, 
 
       stepLength: null,
       stepLengths: [
@@ -256,17 +260,20 @@ export default {
         alert('Bitte geben Sie eine gültige Körpergröße in cm an.');
         return;
       }
+      if (!this.userGender) {
+        alert('Bitte wählen Sie Ihr Geschlecht aus.');
+        return;
+      }
       let stepSize;
       const matching = this.stepLengths.find(row => row.height >= this.userHeight);
       if (matching) {
-        stepSize = (matching.female + matching.male) / 2;
+        stepSize = this.userGender === 'female' ? matching.female : matching.male;
       } else {
         const last = this.stepLengths[this.stepLengths.length - 1];
-        stepSize = (last.female + last.male) / 2;
+        stepSize = this.userGender === 'female' ? last.female : last.male;
       }
       this.stepLength = stepSize;
-      localStorage.setItem('userHeight', this.userHeight);
-      localStorage.setItem('derivedStepSize', stepSize);
+      localStorage.setItem('step_size', stepSize);
 
       this.showMeasurementTutorial = false;
       if (!this.skipRegistration) {
@@ -281,7 +288,8 @@ export default {
         return;
       }
       this.stepLength = this.manualStepLength;
-      localStorage.setItem('manualStepSize', this.manualStepLength);
+      
+      localStorage.setItem('step_size', this.manualStepLength);
 
       this.showMeasurementTutorial = false;
       if (!this.skipRegistration) {
@@ -334,5 +342,10 @@ input {
 
 button {
   margin: 5px;
+}
+
+.gender-selection {
+  margin: 20px 0;
+  text-align: left;
 }
 </style>

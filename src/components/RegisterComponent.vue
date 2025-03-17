@@ -10,8 +10,9 @@
           id="username"
           v-model="username"
           class="formbold-form-input"
-          placeholder="Benutzername"
+          placeholder="Benutzername (max. 15 Zeichen)"
           required
+          maxlength="15"
         />
       </div>
     </div>
@@ -38,8 +39,9 @@
           id="password"
           v-model="password"
           class="formbold-form-input"
-          placeholder="Passwort"
+          placeholder="Passwort (mind. 8 Zeichen)"
           required
+          minlength="8"
         />
       </div>
     </div>
@@ -54,6 +56,7 @@
           class="formbold-form-input"
           placeholder="Passwort eingeben"
           required
+          minlength="8"
         />
       </div>
     </div>
@@ -68,6 +71,10 @@
 
     <button type="submit" class="formbold-btn">Registrieren</button>
   </form>
+
+  <div class="login-link">
+      <p>Schon ein Account vorhanden? <router-link to="/login">Hier einloggen</router-link></p>
+  </div>
 </template>
 
 <script>
@@ -126,10 +133,8 @@ export default {
         return;
       }
 
-      const derivedStepSize = localStorage.getItem("derivedStepSize");
-      const manualStepSize = localStorage.getItem("manualStepSize");
-      this.stepLength = derivedStepSize ? Number(derivedStepSize) : (manualStepSize ? Number(manualStepSize) : null);
-
+      this.stepLength = localStorage.getItem("step_size") ? Number(localStorage.getItem("step_size")) : null;
+      
       console.log("Type of stepLength:", typeof this.stepLength);
       console.log("Value of stepLength:", this.stepLength);
 
@@ -164,12 +169,18 @@ export default {
     redirectToHome() {
       setTimeout(() => {
         window.location.href = "/";
-      }, 5000); // Weiterleitung nach 5 Sekunden
+      }, 5000);
     }
   }
 };
 </script>
 
+
 <style scoped>
 @import "./style.css";
+.login-link {
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center;
+  }
 </style>
