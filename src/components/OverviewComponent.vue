@@ -17,6 +17,7 @@
             <th @click.stop="toggleDropdown('species', $event)">
               Baumart <span class="dropdown-arrow">&#9660;</span>
             </th>
+            <th>CO₂ gespeichert</th>
             <th @click.stop="toggleDropdown('location', $event)">
               Standort <span class="dropdown-arrow">&#9660;</span>
             </th>
@@ -29,15 +30,14 @@
           <tr v-for="tree in filteredTrees" :key="tree.id">
             <td>
               <template v-if="getImageUrl(tree)">
-                <img :src="getImageUrl(tree)" 
-                     alt="Bild von {{ tree.tree_type.name }}" 
-                     class="tree-image" />
+                <img :src="getImageUrl(tree)" alt="Bild von {{ tree.tree_type.name }}" class="tree-image" />
               </template>
               <template v-else>
                 Kein Bild vorhanden
               </template>
             </td>
             <td>{{ `${tree.tree_type.name} (${tree.tree_type.scientific_name})` }}</td>
+            <td>{{ tree.co2_stored.toFixed(2) }} kg</td>
             <!-- Method Getlocation called -->
             <td>{{ getLocation(tree) }}</td>
             <td>{{ formatDate(tree.created_at) }}</td>
@@ -46,28 +46,14 @@
       </table>
 
       <!-- Date element -->
-      <input
-        type="date"
-        ref="dateInput"
-        v-model="selectedDate"
-        @change="updateFilteredTrees"
-        style="visibility: hidden; position: absolute;"
-      />
+      <input type="date" ref="dateInput" v-model="selectedDate" @focus="openNativeDatePicker"
+        @change="updateFilteredTrees" style="visibility: hidden; position: absolute;" />
 
       <!-- Dropdown for tree species -->
-      <div
-        class="dropdown-container hover-dropdown"
-        v-if="dropdownOpen === 'species'"
-        :style="dropdownPosition"
-        @click.stop
-      >
+      <div class="dropdown-container hover-dropdown" v-if="dropdownOpen === 'species'" :style="dropdownPosition"
+        @click.stop>
         <div class="dropdown-menu small-dropdown">
-          <input
-            type="text"
-            v-model="speciesSearch"
-            placeholder="Suchen..."
-            class="dropdown-search"
-          />
+          <input type="text" v-model="speciesSearch" placeholder="Suchen..." class="dropdown-search" />
           <label>
             <input type="checkbox" v-model="selectAllSpecies" @change="toggleSelectAllSpecies" />
             Alles auswählen
@@ -75,12 +61,7 @@
           <div class="checkbox-list">
             <div v-for="species in filteredSpecies" :key="species">
               <label>
-                <input
-                  type="checkbox"
-                  v-model="selectedSpecies"
-                  :value="species"
-                  @change="updateFilteredTrees"
-                />
+                <input type="checkbox" v-model="selectedSpecies" :value="species" @change="updateFilteredTrees" />
                 {{ species }}
               </label>
             </div>
@@ -89,19 +70,10 @@
       </div>
 
       <!-- Dropdown for locations -->
-      <div
-        class="dropdown-container hover-dropdown"
-        v-if="dropdownOpen === 'location'"
-        :style="dropdownPosition"
-        @click.stop
-      >
+      <div class="dropdown-container hover-dropdown" v-if="dropdownOpen === 'location'" :style="dropdownPosition"
+        @click.stop>
         <div class="dropdown-menu small-dropdown">
-          <input
-            type="text"
-            v-model="locationSearch"
-            placeholder="Suchen..."
-            class="dropdown-search"
-          />
+          <input type="text" v-model="locationSearch" placeholder="Suchen..." class="dropdown-search" />
           <label>
             <input type="checkbox" v-model="selectAllLocations" @change="toggleSelectAllLocations" />
             Alles auswählen
@@ -109,12 +81,7 @@
           <div class="checkbox-list">
             <div v-for="location in filteredLocations" :key="location">
               <label>
-                <input
-                  type="checkbox"
-                  v-model="selectedLocations"
-                  :value="location"
-                  @change="updateFilteredTrees"
-                />
+                <input type="checkbox" v-model="selectedLocations" :value="location" @change="updateFilteredTrees" />
                 {{ location }}
               </label>
             </div>
@@ -141,7 +108,7 @@ export default {
       calendarOpen: false,
       dropdownPosition: {},
       filteredTrees: [],
-      trees: [] 
+      trees: []
     };
   },
   computed: {
@@ -178,14 +145,12 @@ export default {
   },
   methods: {
     openNativeDatePicker() {
-      if (this.filteredTrees.length === 0) return;
-      this.$nextTick(() => {
-        if (this.$refs.dateInput.showPicker) {
+      if (this.$refs.dateInput) {
+        this.$refs.dateInput.value = '';
+        this.$nextTick(() => {
           this.$refs.dateInput.showPicker();
-        } else {
-          this.$refs.dateInput.focus();
-        }
-      });
+        });
+      }
     },
     toggleDropdown(type, event) {
       if (this.filteredTrees.length === 0) return;
@@ -329,7 +294,7 @@ export default {
     addMarkers() {
     },
     //Method for the location edition
-    getLocation(tree) { 
+    getLocation(tree) {
       if (!tree.locationName || tree.locationName.trim() === "" || tree.locationName.trim() === "0") {
         return "Keine Angabe";
       }
@@ -344,25 +309,25 @@ export default {
 
 <script setup>
 
-import {onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // Variable, um zu prüfen, ob der Benutzer authentifiziert ist
 const router = useRouter();
-  
-  // Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
-  const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
-        return;
-    }
-  };
-  
-  // Beim Laden der Seite die Authentifizierung prüfen
-  onMounted(() => {
-    checkAuth();
-  });
+
+// Überprüfen, ob ein gültiges Token im localStorage vorhanden ist
+const checkAuth = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/"); // Falls kein Token vorhanden ist, zurück zur Login-Seite
+    return;
+  }
+};
+
+// Beim Laden der Seite die Authentifizierung prüfen
+onMounted(() => {
+  checkAuth();
+});
 
 </script>
 
@@ -423,6 +388,7 @@ td {
   text-align: left;
   cursor: default;
 }
+
 th {
   position: relative;
   cursor: pointer;
