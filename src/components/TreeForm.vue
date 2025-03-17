@@ -5,7 +5,13 @@
 
     <div class="formbold-input-flex">
       <label class="formbold-form-label">Baumart</label>
-      <input v-model="formData.tree_type" placeholder="Baumart" class="formbold-form-input" required />
+      <select v-model="formData.tree_type_id" class="formbold-form-input" required>
+        <option value="" disabled>Bitte Baumart wählen</option>
+        <option v-for="tree in dropDownList" :key="tree.id" :value="tree.id">
+          {{ tree.name }}
+        </option>
+      </select>
+
     </div>
 
     <label class="formbold-form-label">Höhe des Baumes</label>
@@ -45,14 +51,14 @@ import { Geolocation } from '@capacitor/geolocation';
 export default {
   data() {
     return {
+      dropDownList: [],
       location: null,
       formData: {
-        tree_type: "",
+        tree_type_id: 0,
         latitude: 0,
         longitude: 0,
-        health_status: 1,
+        health_status_id: 1,
         measurement: {
-          suspected_tree_type: "",
           height: 0,
           inclination: 0,
           trunk_diameter: 0,
@@ -67,11 +73,11 @@ export default {
       const { latitude, longitude } = this.location;
       return `https://www.openstreetmap.org/export/embed.html?bbox=${longitude}%2C${latitude}%2C${longitude}%2C${latitude}&layer=mapnik&marker=${latitude}%2C${longitude}`;
     }
+
   },
   methods: {
     async submitForm() {
       try {
-        this.formData.measurement.suspected_tree_type = this.formData.tree_type;
         console.log(JSON.stringify(this.formData));
         const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/create-tree", {
           method: "POST",
@@ -86,6 +92,30 @@ export default {
         console.log("Antwort vom Server:", result);
       } catch (error) {
         console.error("Fehler beim Senden des Formulars:", error);
+      }
+    },
+    async fetchTreeTypes() {
+      try {
+        const response = await fetch("https://treescope.cs.hs-fulda.de/api/v1/trees/types", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",  // API erwartet JSON-Daten
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.log("Fehler beim Abrufen der Baumarten");
+        }
+
+        const data = await response.json();
+        console.log("Baumarten vom Server:", data);
+
+        this.dropDownList = data.tree_types || [];
+
+      } catch (error) {
+        console.error("Fehler beim Abrufen der Baumarten:", error);
+        this.dropDownList = []; // Setze eine leere Liste als Fallback
       }
     },
     async getLocation() {
@@ -124,6 +154,7 @@ export default {
   },
   created: function () {
     this.getLocation()
+    this.fetchTreeTypes()
   }
 };
 </script>
@@ -144,6 +175,8 @@ const checkAuth = () => {
     return;
   }
 };
+
+
 
 // Beim Laden der Seite die Authentifizierung prüfen
 onMounted(() => {
