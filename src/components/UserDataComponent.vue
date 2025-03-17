@@ -446,95 +446,98 @@ export default {
     },
 
     async updateUser() {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Kein Authentifizierungstoken gefunden. Bitte logge dich erneut ein.");
-        this.$router.push("/login");
-        return;
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Kein Authentifizierungstoken gefunden. Bitte logge dich erneut ein.");
+    this.$router.push("/login");
+    return;
+  }
+
+  this.formError = "";
+  this.addressError = "";
+
+  if (!this.isAddressValid) {
+    this.formError = "Bitte wähle eine gültige Adresse aus.";
+    return;
+  }
+  if (!this.validateCoordinates()) {
+    return;
+  }
+  if (!this.user.username.trim()) {
+    this.formError = "Bitte gib einen gültigen Benutzernamen ein.";
+    return;
+  }
+  if (!this.user.step_length || this.user.step_length < 60 || this.user.step_length > 90) {
+    this.formError = "Bitte gib eine Schrittlänge zwischen 60 und 90 cm ein.";
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const userId = payload.user_id || payload.id;
+    if (!userId) {
+      alert("Benutzer-ID konnte nicht ermittelt werden.");
+      this.$router.push("/login");
+      return;
+    }
+
+    const updateParams = {
+      username: this.user.username,
+      latitude: this.formatCoordinate(this.user.latitude),
+      longitude: this.formatCoordinate(this.user.longitude),
+      step_length: this.user.step_length
+    };
+    if (this.user.firstName.trim() !== "") {
+      updateParams.first_name = this.user.firstName;
+    }
+    if (this.user.lastName.trim() !== "") {
+      updateParams.last_name = this.user.lastName;
+    }
+
+    const response = await fetch(`https://treescope.cs.hs-fulda.de/api/v1/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(updateParams)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      alert("Daten erfolgreich aktualisiert!");
+      this.isEditing = false;
+
+      this.user.username = data.username || "";
+      this.user.email = data.email || "";
+      this.user.firstName = data.first_name || "";
+      this.user.lastName = data.last_name || "";
+      this.user.step_length = data.step_length || 0;
+      this.user.latitude = this.formatCoordinate(data.latitude) || "";
+      this.user.longitude = this.formatCoordinate(data.longitude) || "";
+
+      // Schrittlänge im Local Storage speichern
+      localStorage.setItem("step_size", this.user.step_length);
+
+      if (this.user.latitude && this.user.longitude) {
+        await this.reverseGeocode(this.user.latitude, this.user.longitude);
       }
+    } else {
+      const errData = await response.json() || {};
+      const errMsg = errData.message || "";
 
-      this.formError = "";
-      this.addressError = "";
-
-      if (!this.isAddressValid) {
-        this.formError = "Bitte wähle eine gültige Adresse aus.";
-        return;
+      if (errMsg.includes("first_name")) {
+        this.formError = "Der Vorname darf keine Zahlen oder Sonderzeichen enthalten.";
+      } else if (errMsg.includes("last_name")) {
+        this.formError = "Der Nachname darf keine Zahlen oder Sonderzeichen enthalten.";
+      } else {
+        this.formError = "Beim Speichern ist ein Fehler aufgetreten. Bitte prüfe deine Eingaben.";
       }
-      if (!this.validateCoordinates()) {
-        return;
-      }
-      if (!this.user.username.trim()) {
-        this.formError = "Bitte gib einen gültigen Benutzernamen ein.";
-        return;
-      }
-      if (!this.user.step_length || this.user.step_length < 60 || this.user.step_length > 90) {
-        this.formError = "Bitte gib eine Schrittlänge zwischen 60 und 90 cm ein.";
-        return;
-      }
-
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const userId = payload.user_id || payload.id;
-        if (!userId) {
-          alert("Benutzer-ID konnte nicht ermittelt werden.");
-          this.$router.push("/login");
-          return;
-        }
-
-        const updateParams = {
-          username: this.user.username,
-          latitude: this.formatCoordinate(this.user.latitude),
-          longitude: this.formatCoordinate(this.user.longitude),
-          step_length: this.user.step_length 
-        };
-        if (this.user.firstName.trim() !== "") {
-          updateParams.first_name = this.user.firstName;
-        }
-        if (this.user.lastName.trim() !== "") {
-          updateParams.last_name = this.user.lastName;
-        }
-
-        const response = await fetch(`https://treescope.cs.hs-fulda.de/api/v1/users/${userId}`, {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(updateParams)
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          alert("Daten erfolgreich aktualisiert!");
-          this.isEditing = false;
-
-          this.user.username = data.username || "";
-          this.user.email = data.email || "";
-          this.user.firstName = data.first_name || "";
-          this.user.lastName = data.last_name || "";
-          this.user.step_length = data.step_length || 0;
-          this.user.latitude = this.formatCoordinate(data.latitude) || "";
-          this.user.longitude = this.formatCoordinate(data.longitude) || "";
-
-          if (this.user.latitude && this.user.longitude) {
-            await this.reverseGeocode(this.user.latitude, this.user.longitude);
-          }
-        } else {
-          const errData = await response.json() || {};
-          const errMsg = errData.message || "";
-
-          if (errMsg.includes("first_name")) {
-            this.formError = "Der Vorname darf keine Zahlen oder Sonderzeichen enthalten.";
-          } else if (errMsg.includes("last_name")) {
-            this.formError = "Der Nachname darf keine Zahlen oder Sonderzeichen enthalten.";
-          } else {
-            this.formError = "Beim Speichern ist ein Fehler aufgetreten. Bitte prüfe deine Eingaben.";
-          }
-        }
-      } catch (error) {
-        this.formError = "Netzwerkfehler oder Server nicht erreichbar.";
-      }
-    },
+    }
+  } catch (error) {
+    this.formError = "Netzwerkfehler oder Server nicht erreichbar.";
+  }
+},
 
     async changeEmail() {
       const token = localStorage.getItem("token");
